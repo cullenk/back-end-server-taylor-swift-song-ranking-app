@@ -13,7 +13,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:4200', // Replace with your Angular app's URL
+  credentials: true
+}));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -39,6 +42,27 @@ mongoose.connect(dbUrl, connectionParams)
     console.log("Error: ", e)
 })
 
+//JWT Authentication middleware to populate req.user
+
+const authenticateJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, "secret_string", (err, user) => {
+      if (err) {
+        return res.status(403).json({ message: 'Invalid or expired token' });
+      }
+
+      req.user = user;
+      next();
+    });
+  } else {
+    res.status(401).json({ message: 'Authorization header missing' });
+  }
+};
+
 // User sign-up endpoint and behavior
 
 app.post('/signup', async (req, res) => {
@@ -60,76 +84,77 @@ app.post('/signup', async (req, res) => {
 
 // User login if account already created
 
-app.post('/login', (req, res) => {
-  let userFound;
-  UserModel.findOne({username: req.body.username})
-    .then(user => {
-      if (!user) {
-        // Throw an error instead of sending a response
-        throw new Error('User not found');
-      }
-      userFound = user;
-      return bcrypt.compare(req.body.password, user.password);
-    })
-    .then(result => {
-      if (!result) {
-        // Throw an error instead of sending a response
-        throw new Error('Password is incorrect');
-      }
-      const token = jwt.sign(
-        {username: userFound.username, userId: userFound._id},
-        "secret_string",
-        {expiresIn: "1h"}
-      );
-      res.status(200).json({
-        token: token,
-        expiresIn: 3600
-      });
-    })
-    .catch(err => {
-      // Handle all errors here
-      if (err.message === 'User not found' || err.message === 'Password is incorrect') {
-        res.status(401).json({
-          message: err.message
-        });
-      } else {
-        res.status(500).json({
-          message: 'Error with authentication'
-        });
-      }
+app.post('/login', async (req, res) => {
+  try {
+    const user = await UserModel.findOne({username: req.body.username});
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+    
+    const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Password is incorrect' });
+    }
+
+    const token = jwt.sign(
+      {username: user.username, userId: user._id},
+      "secret_string",
+      {expiresIn: "1h"}
+    );
+
+    res.status(200).json({
+      token: token,
+      expiresIn: 3600
     });
+  } catch (error) {
+    res.status(500).json({ message: 'Error with authentication' });
+  }
 });
 
 // Get user's top 13 list
-app.get('/user/top-thirteen', async (req, res) => {
-  const user = await User.findById(req.user.id).populate('topThirteen.albumId');
-  res.json(user.topThirteen);
+app.get('/user/top-thirteen', authenticateJWT, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.userId).populate('topThirteen.albumId');
+    res.json(user.topThirteen);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Add or update a song in the top 13 list
-app.post('/user/top-thirteen', async (req, res) => {
+app.post('/user/top-thirteen', authenticateJWT, async (req, res) => {
   const { slot, albumId, songTitle } = req.body;
-  const user = await User.findById(req.user.id);
-  const song = user.topThirteen.find(item => item.slot === slot);
 
-  if (song) {
-    song.albumId = albumId;
-    song.songTitle = songTitle;
-  } else {
-    user.topThirteen.push({ slot, albumId, songTitle });
+  try {
+    const user = await UserModel.findById(req.user.userId);
+    const song = user.topThirteen.find(item => item.slot === slot);
+
+    if (song) {
+      song.albumId = albumId;
+      song.songTitle = songTitle;
+    } else {
+      user.topThirteen.push({ slot, albumId, songTitle });
+    }
+
+    await user.save();
+    res.json(user.topThirteen);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  await user.save();
-  res.json(user.topThirteen);
 });
 
 // Remove a song from the top 13 list
-app.delete('/user/top-thirteen/:slot', async (req, res) => {
+app.delete('/user/top-thirteen/:slot', authenticateJWT, async (req, res) => {
   const slot = parseInt(req.params.slot);
-  const user = await User.findById(req.user.id);
-  user.topThirteen = user.topThirteen.filter(item => item.slot !== slot);
-  await user.save();
-  res.json(user.topThirteen);
+
+  try {
+    const user = await UserModel.findById(req.user.userId);
+    user.topThirteen = user.topThirteen.filter(item => item.slot !== slot);
+    await user.save();
+    res.json(user.topThirteen);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Return all albums
@@ -146,19 +171,30 @@ app.get('/allAlbums', async (req, res) => {
  //Return an album by searching for a song that it contains
  app.get('/albumBySong', async (req, res) => {
   try {
-    const songTitle = req.query.songTitle;
+    const songTitle = decodeURIComponent(req.query.songTitle);
+    console.log('Searching for song:', songTitle); // Add this log
 
-    // Find the album that contains the specified song
-    const album = await Album.findOne({
-      'songs.title': { $regex: new RegExp(songTitle, 'i') }
+    // Find the album that contains the specified song, remove parenthesis or special characters
+    console.log('Query:', {
+      'songs.title': { $regex: new RegExp(songTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') }
     });
+    const album = await Album.findOne({
+      'songs.title': { $regex: new RegExp(songTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') }
+    });
+    console.log('Album found:', album);
 
     if (!album) {
-      return res.status(404).json({ message: 'This song is not found in any Taylor Swift album!' });
+      console.log('Album not found for song:', songTitle);
+      return res.status(404).json({ 
+        message: `Song "${songTitle}" not found in any Taylor Swift album!`,
+        searchedTitle: songTitle,
+        decodedTitle: decodeURIComponent(req.query.songTitle)
+      });
     }
 
     res.json(album);
   } catch (err) {
+    console.error('Error in /albumBySong:', err); // Add this log
     res.status(500).json({ message: err.message });
   }
 });
