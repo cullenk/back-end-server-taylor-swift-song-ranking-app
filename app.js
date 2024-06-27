@@ -114,8 +114,8 @@ app.post('/login', async (req, res) => {
 // Get user's top 13 list
 app.get('/user/top-thirteen', authenticateJWT, async (req, res) => {
   try {
-    const user = await UserModel.findById(req.user.userId).populate('topThirteen.albumId');
-    res.json(user.topThirteen);
+    const user = await UserModel.findById(req.user.userId).populate('rankings.topThirteen.albumId');
+    res.json(user.rankings.topThirteen);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -127,17 +127,20 @@ app.post('/user/top-thirteen', authenticateJWT, async (req, res) => {
 
   try {
     const user = await UserModel.findById(req.user.userId);
-    const song = user.topThirteen.find(item => item.slot === slot);
+    if (!user.rankings) {
+      user.rankings = { topThirteen: [] };
+    }
+    const song = user.rankings.topThirteen.find(item => item.slot === slot);
 
     if (song) {
       song.albumId = albumId;
       song.songTitle = songTitle;
     } else {
-      user.topThirteen.push({ slot, albumId, songTitle });
+      user.rankings.topThirteen.push({ slot, albumId, songTitle });
     }
 
     await user.save();
-    res.json(user.topThirteen);
+    res.json(user.rankings.topThirteen);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -149,13 +152,62 @@ app.delete('/user/top-thirteen/:slot', authenticateJWT, async (req, res) => {
 
   try {
     const user = await UserModel.findById(req.user.userId);
-    user.topThirteen = user.topThirteen.filter(item => item.slot !== slot);
-    await user.save();
-    res.json(user.topThirteen);
+    if (user.rankings && user.rankings.topThirteen) {
+      user.rankings.topThirteen = user.rankings.topThirteen.filter(item => item.slot !== slot);
+      await user.save();
+    }
+    res.json(user.rankings.topThirteen);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Get user rankings
+app.get('/rankings', authenticateJWT, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.userId).select('rankings');
+    res.json(user.rankings);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+// Update a specific ranking list
+app.put('/rankings/:listName', authenticateJWT, async (req, res) => {
+  const { listName } = req.params;
+  const { rankings } = req.body;
+
+  try {
+    let user = await UserModel.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    if (!user.rankings) {
+      user.rankings = {};
+    }
+
+    if (listName === 'topThirteen') {
+      user.rankings.topThirteen = rankings;
+    } else {
+      if (!user.rankings.albumRankings) {
+        user.rankings.albumRankings = {};
+      }
+      user.rankings.albumRankings[listName] = rankings;
+    }
+
+    await user.save();
+
+    res.json(user.rankings);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+
 
 // Return all albums
 
