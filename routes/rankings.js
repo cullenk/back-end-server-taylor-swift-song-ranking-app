@@ -7,7 +7,8 @@ const authenticateJWT = require('../middleware/auth');
 router.get('/user/top-thirteen', authenticateJWT, async (req, res) => {
     try {
       const user = await User.findById(req.user.userId).populate('rankings.topThirteen.albumId');
-      res.json(user.rankings.topThirteen);
+      const sortedTopThirteen = user.rankings.topThirteen.sort((a, b) => a.slot - b.slot);
+      res.json(sortedTopThirteen);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

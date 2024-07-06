@@ -18,12 +18,14 @@ const authRoutes = require('./routes/auth');
 const forgotPasswordRoutes = require('./routes/passwords');
 const rankingsRoutes = require('./routes/rankings');
 const searchRoutes = require('./routes/search');
+const profileRoutes = require('./routes/profile')
 
 app.use('/api/albums', albumController);
 app.use('/api/auth', authRoutes);
 app.use('/api/passwords', forgotPasswordRoutes);
 app.use('/api/rankings', rankingsRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/profile', profileRoutes)
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
