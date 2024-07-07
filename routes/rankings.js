@@ -100,4 +100,37 @@ router.put('/rankings/:listName', authenticateJWT, async (req, res) => {
     }
   });
 
+// GET /api/rankings/eras-tour-set-list
+router.get('/eras-tour-set-list', authenticateJWT, async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id);
+      console.log('User setlist:', user.erasTourSetList);
+      res.json(user.erasTourSetList || []);
+    } catch (error) {
+      console.error('Error fetching Eras Tour set list:', error);
+      res.status(500).json({ message: 'Error fetching set list', error: error.message });
+    }
+  });
+  
+  // PUT /api/rankings/eras-tour-set-list
+  router.put('/eras-tour-set-list', authenticateJWT, async (req, res) => {
+    try {
+      const { erasTourSetList } = req.body;
+      const userId = req.user.id; 
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
+      }
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { erasTourSetList },
+        { new: true }
+      );
+      res.json(user.erasTourSetList);
+    } catch (error) {
+      console.error('Error updating Eras Tour set list:', error);
+      res.status(500).json({ message: 'Error updating set list', error: error.message });
+    }
+  });
+  
+
   module.exports = router;

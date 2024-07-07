@@ -36,7 +36,12 @@ const userSchema = new mongoose.Schema({
       theTorturedPoetsDepartment: [rankingSchema],
       standaloneSingles: [rankingSchema]
     }
-  }
+  },
+  erasTourSetList: [{
+    order: Number,
+    era: String,
+    songs: [{ type: String, default: null }]
+  }]
 });
 
 userSchema.plugin(uniqueValidator);

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Album = require('../myModels/albumModel');
+const { Song } = require('../myModels/songModel')
 
 
 // Return all albums
@@ -64,5 +65,23 @@ router.get('/songSearch', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+router.get('/:albumName', async (req, res) => {
+    try {
+      const { albumName } = req.params;
+      console.log('Searching for songs in album:', albumName);
+      const album = await Album.findOne({ title: albumName });
+      if (!album) {
+        return res.status(404).json({ message: 'Album not found' });
+      }
+      console.log('Found songs:', album.songs);
+      res.json(album.songs);
+    } catch (error) {
+      console.error('Error fetching songs by album:', error);
+      res.status(500).json({ message: 'Error fetching songs', error: error.message });
+    }
+  });
+  
+  
 
 module.exports = router;
