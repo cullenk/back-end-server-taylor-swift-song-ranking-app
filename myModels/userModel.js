@@ -3,10 +3,22 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const rankingSchema = new mongoose.Schema({
   slot: Number,
-  albumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Album' },
-  songId: { type: mongoose.Schema.Types.ObjectId, ref: 'Song' },
+  albumName: String,
+  songId: { type: mongoose.Schema.Types.ObjectId },
   songTitle: String,
+  albumCover: String,
   rank: Number
+});
+
+const eraSetListSongSchema = new mongoose.Schema({
+  title: String,
+  audioSource: String
+});
+
+const eraSetListSchema = new mongoose.Schema({
+  order: Number,
+  era: String,
+  songs: [eraSetListSongSchema]
 });
 
 const userSchema = new mongoose.Schema({
@@ -37,11 +49,7 @@ const userSchema = new mongoose.Schema({
       standaloneSingles: [rankingSchema]
     }
   },
-  erasTourSetList: [{
-    order: Number,
-    era: String,
-    songs: [{ type: String, default: null }]
-  }]
+  erasTourSetList: [eraSetListSchema]
 });
 
 userSchema.plugin(uniqueValidator);
@@ -49,4 +57,3 @@ userSchema.plugin(uniqueValidator);
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
-

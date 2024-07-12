@@ -1,0 +1,109 @@
+{
+  "title": "evermore",
+  "releaseYear": 2020,
+  "albumCover": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+  "songs": [
+    {
+      "title": "willow",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/willow.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "champagne problems",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/champagne+problems.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "gold rush",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/gold+rush.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "'tis the damn season'",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/%E2%80%98tis+the+damn+season.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "tolerate it",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/tolerate+it.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "no body, no crime [feat. HAIM]",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/no+body%2C+no+crime.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "happiness",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/happiness.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "dorothea",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/dorothea.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "coney island [feat. The National]",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/coney+island.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "ivy",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/ivy.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "cowboy like me",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/cowboy+like+me.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "long story short",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/long+story+short.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "marjorie",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/marjorie.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "closure",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/closure.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "evermore [feat. Bon Iver]",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/evermore.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "right where you left me (bonus track)",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/right+where+you+left+me+(bonus+track).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    },
+    {
+      "title": "it's time to go (bonus track)",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/evermore/it%E2%80%99s+time+to+go+(bonus+track).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+      "album": "evermore"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "title": "Taylor Swift",
+  "releaseYear": 2006,
+  "albumCover": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+  "songs": [
+    {
+      "title": "Tim McGraw",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Tim+McGraw.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Picture to Burn",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Picture+To+Burn.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Teardrops On My Guitar",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Teardrops+On+My+Guitar.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "A Place in This World",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/A+Place+in+this+World.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Cold As You",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Cold+As+You.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "The Outside",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/The+Outside.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Tied Together With A Smile",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Tied+Together+with+a+Smile.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Stay Beautiful",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Stay+Beautiful.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Should've Said No",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Should've+Said+No.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Mary's Song (Oh My My My)",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Mary's+Song+(Oh+My+My+My).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Our Song",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Our+Song.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "I'm Only Me When I'm With You",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/I'm+Only+Me+When+I'm+With+You.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Invisible",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Invisible.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "A Perfectly Good Heart",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/A+Perfectly+Good+Heart.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    },
+    {
+      "title": "Teardrops On My Guitar (Pop Version)",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Debut/Teardrops+on+My+Guitar+(Pop+Version).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+      "album": "Taylor Swift"
+    }
+  ]
+}

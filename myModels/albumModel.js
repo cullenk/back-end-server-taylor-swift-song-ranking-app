@@ -1,14 +1,19 @@
 const mongoose = require('mongoose');
-const { songSchema } = require('./songModel');
+
+const songSchema = new mongoose.Schema({
+    title: String,
+    audioSource: String,
+    albumCover: String,
+    albumName: String 
+});
 
 const albumSchema = new mongoose.Schema({
     title: String,
     releaseYear: Number,
-    albumImage: String,
+    albumCover: String,
     songs: [songSchema]
 });
 
 const Album = mongoose.model('Album', albumSchema);
 
 module.exports = Album;
-

@@ -1,0 +1,115 @@
+{
+  "title": "Singles",
+  "releaseYear": 2006,
+  "albumCover": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/Singles.svg",
+  "songs": [
+    {
+      "title": "All Of The Girls You've Loved Before",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/All+Of+The+Girls+You+Loved+Before.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/AllOfTheGirls.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "Beautiful Eyes",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Beautiful+Eyes.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/Beautiful_Eyes.png",
+      "album": "Singles"
+    },
+    {
+      "title": "Beautiful Ghosts",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Beautiful+Ghosts.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/beautifulGhosts.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "Can't Stop Loving You (Live)",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Can't+Stop+Loving+You+(Phil+Collins+Cover+-+Live).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/cantStop.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "Carolina",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Carolina.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/carolina.png",
+      "album": "Singles"
+    },
+    {
+      "title": "Christmas Tree Farm",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Christmas+Tree+Farm.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/treefarm.png",
+      "album": "Singles"
+    },
+    {
+      "title": "Crazier",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Crazier.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/crazier.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "Eyes Open",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Eyes+Open+(Taylor's+Version).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/eyesOpen.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "Highway Don't Care [feat. Tim McGraw]",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Highway+Don't+Care+%5Bfeat.+Tim+McGraw+%26+Keith+Urban%5D.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/highway.png",
+      "album": "Singles"
+    },
+    {
+      "title": "I Don't Wanna Live Forever [feat. ZAYN]",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/I+Don%E2%80%99t+Wanna+Live+Forever+%5Bfeat.+ZAYN%5D.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/liveforever.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "I Heart ?",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/I+Heart+%3F.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/Beautiful_Eyes.png",
+      "album": "Singles"
+    },
+    {
+      "title": "I'd Lie",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/I'd+Lie.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/lie.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "If This Was A Movie",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/If+This+Was+A+Movie+(Taylor%E2%80%99s+Version).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/thisWasAMovie.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "Last Christmas",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Last+Christmas.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/lastXmas.jpeg",
+      "album": "Singles"
+    },
+    {
+      "title": "Only The Young",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Only+The+Young.mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/onlyTheYoung.png",
+      "album": "Singles"
+    },
+    {
+      "title": "Safe & Sound",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Safe+%26+Sound+(Taylor's+Version).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/eyesOpen.jpg",
+      "album": "Singles"
+    },
+    {
+      "title": "Sweeter Than Fiction",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/Sweeter+Than+Fiction+(Taylor's+Version).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/sweeterThanFiction.png",
+      "album": "Singles"
+    },
+    {
+      "title": "You're Losing Me (From The Vault)",
+      "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/Singles/You're+Losing+Me+(From+The+Vault).mp3",
+      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/losingMe.png",
+      "album": "Singles"
+    }
+  ]
+}
