@@ -76,4 +76,18 @@ router.get('/public-profile/:username', async (req, res) => {
     }
 });
 
+// Get eras tour set list by username
+router.get('/eras-tour-set-list/:username', async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username }).select('erasTourSetList');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user.erasTourSetList);
+    } catch (error) {
+        console.error('Error fetching eras tour set list:', error);
+        res.status(500).json({ message: 'Error fetching eras tour set list', error: error.message });
+    }
+});
+
 module.exports = router;

@@ -12,7 +12,8 @@ const rankingSchema = new mongoose.Schema({
 
 const eraSetListSongSchema = new mongoose.Schema({
   title: String,
-  audioSource: String
+  audioSource: String,
+  isMashup: { type: Boolean, default: false }
 });
 
 const eraSetListSchema = new mongoose.Schema({
