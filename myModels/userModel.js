@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
+
+const albumRankingSchema = new mongoose.Schema({
+  rank: Number,
+  albumName: String,
+  albumCover: String
+});
+
 const rankingSchema = new mongoose.Schema({
   slot: Number,
   albumName: String,
@@ -27,6 +34,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   theme: String,
+  loginCount: { type: Number, default: 0 },
   profileQuestions: [{
     question: String,
     answer: String
@@ -47,7 +55,8 @@ const userSchema = new mongoose.Schema({
       evermore: [rankingSchema],
       midnights: [rankingSchema],
       theTorturedPoetsDepartment: [rankingSchema],
-      standaloneSingles: [rankingSchema]
+      standaloneSingles: [rankingSchema],
+      allAlbums: [albumRankingSchema]
     }
   },
   erasTourSetList: [eraSetListSchema]

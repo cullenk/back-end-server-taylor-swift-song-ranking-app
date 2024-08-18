@@ -70,14 +70,14 @@ router.get('/songs/:songId', async (req, res) => {
 // Get all albums
 router.get('/allAlbums', async (req, res) => {
   try {
-    const albums = await Album.find({});
+    // Fetch all albums with only the necessary fields
+    const albums = await Album.find({}, 'title albumCover releaseYear');
     res.json(albums);
   } catch (error) {
     console.error('Error fetching albums:', error);
     res.status(500).json({ message: 'Error fetching albums', error: error.message });
   }
 });
-
 
 router.get('/albumBySong', async (req, res) => {
     try {

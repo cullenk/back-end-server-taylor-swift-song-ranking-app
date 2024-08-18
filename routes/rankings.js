@@ -32,7 +32,7 @@ router.post('/user/top-thirteen', authenticateJWT, async (req, res) => {
         }
         const song = user.rankings.topThirteen.find(item => item.slot === slot);
 
-        if (song) { 
+        if (song) {
             song.albumName = albumName;
             song.songId = songId;
             song.songTitle = songTitle;
@@ -73,13 +73,55 @@ router.delete('/user/top-thirteen/:slot', authenticateJWT, async (req, res) => {
 // Get user rankings
 router.get('/rankings', authenticateJWT, async (req, res) => {
     try {
-      const user = await User.findById(req.user.userId).select('rankings');
-      res.json(user.rankings);
+        const user = await User.findById(req.user.userId).select('rankings');
+        res.json(user.rankings);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
-  });
+});
+
+// Update all albums ranking list
+router.put('/allAlbumsRanking/allAlbumsRanking', authenticateJWT, async (req, res) => {
+    const { rankings } = req.body;
+    console.log('Received rankings:', rankings); // Log received rankings
+
+    try {
+        let user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        if (!user.rankings) {
+            user.rankings = {};
+        }
+
+        if (!user.rankings.albumRankings) {
+            user.rankings.albumRankings = {};
+        }
+
+        user.rankings.albumRankings['allAlbums'] = rankings.map(ranking => ({
+            rank: ranking.rank,
+            albumName: ranking.albumName,
+            albumCover: ranking.albumCover
+        }));
+
+        console.log('Saving rankings:', user.rankings.albumRankings['allAlbums']); // Log before saving
+
+        await user.save();
+
+        // Fetch the updated user to ensure data is saved correctly
+        user = await User.findById(req.user.userId);
+
+        console.log('Returning updated rankings:', user.rankings.albumRankings['allAlbums']); // Log the response
+
+        res.json(user.rankings.albumRankings['allAlbums']); // Return updated rankings
+    } catch (err) {
+        console.error('Error:', err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 // Update a specific ranking list
 router.put('/rankings/:listName', authenticateJWT, async (req, res) => {
@@ -87,32 +129,33 @@ router.put('/rankings/:listName', authenticateJWT, async (req, res) => {
     const { rankings } = req.body;
 
     try {
-      let user = await User.findById(req.user.userId);
-      if (!user) {
-        return res.status(404).json({ msg: 'User not found' });
-      }
-
-      if (!user.rankings) {
-        user.rankings = {};
-      }
-
-      if (listName === 'topThirteen') {
-        user.rankings.topThirteen = rankings;
-      } else {
-        if (!user.rankings.albumRankings) {
-          user.rankings.albumRankings = {};
+        let user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
         }
-        user.rankings.albumRankings[listName] = rankings;
-      }
 
-      await user.save();
+        if (!user.rankings) {
+            user.rankings = {};
+        }
 
-      res.json(user.rankings);
+        if (listName === 'topThirteen') {
+            user.rankings.topThirteen = rankings;
+        } else {
+            if (!user.rankings.albumRankings) {
+                user.rankings.albumRankings = {};
+            }
+            user.rankings.albumRankings[listName] = rankings;
+            console.log('Dynamic Ranking List Called')
+        }
+
+        await user.save();
+
+        res.json(user.rankings);
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
-  });
+});
 
 
 // Get Eras Tour Set List

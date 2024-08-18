@@ -35,6 +35,9 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'User not found' });
         }
 
+        user.loginCount += 1;
+        await user.save();
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Password is incorrect' });
