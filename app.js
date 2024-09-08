@@ -15,18 +15,20 @@ app.use(cors({
 
 const albumRoutes = require('./routes/albums');
 const authRoutes = require('./routes/auth');
+const mailRoutes = require('./routes/sendMail')
 const forgotPasswordRoutes = require('./routes/passwords');
 const rankingsRoutes = require('./routes/rankings');
 const profileRoutes = require('./routes/profile');
 const userRoutes = require('./routes/users')
 
+
 app.use('/api/albums', albumRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/sendMail', mailRoutes);
 app.use('/api/passwords', forgotPasswordRoutes);
 app.use('/api/rankings', rankingsRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/users', userRoutes);
-
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
