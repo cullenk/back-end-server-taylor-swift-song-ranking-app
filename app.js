@@ -24,7 +24,12 @@ const rankingsRoutes = require('./routes/rankings');
 const profileRoutes = require('./routes/profile');
 const userRoutes = require('./routes/users')
 
-
+app.get('/', (req, res) => {
+  res.send('Welcome to the Swiftie Ranking Hub API!');
+});
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'API is running' });
+});
 app.use('/api/albums', albumRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/sendMail', mailRoutes);
