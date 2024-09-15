@@ -64,8 +64,8 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/users', userRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true
 })
 .then(() => console.info("Connected to the DB"))
 .catch((e) => console.error("DB Connection Error:", e));
@@ -78,5 +78,5 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 443;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
