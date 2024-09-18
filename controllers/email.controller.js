@@ -43,7 +43,7 @@ exports.sendEmail = async (emailData) => {
 
         case 'passwordReset':
             console.log('Preparing password reset email');
-            const resetUrl = `http://localhost:4200/reset-password/${resetToken}`;
+            const resetUrl = `http://www.swiftierankinghub.com/reset-password/${resetToken}`;
             msg = {
                 ...msg,
                 to: to,

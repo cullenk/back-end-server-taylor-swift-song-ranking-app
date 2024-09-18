@@ -52,7 +52,7 @@ router.post('/signup', async (req, res) => {
 
         // User created successfully
         res.status(201).json({ 
-            message: 'User created successfully',
+            message: 'Account created successfully, check your email for a welcome message!',
             userId: newUser._id // Optionally send back the user ID
         });
 
