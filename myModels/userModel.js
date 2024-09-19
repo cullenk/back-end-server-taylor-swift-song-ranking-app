@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   theme: String,
+  profileImage: String,
   loginCount: { type: Number, default: 0 },
   profileQuestions: [{
     question: String,

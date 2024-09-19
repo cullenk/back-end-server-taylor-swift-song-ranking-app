@@ -17,6 +17,17 @@ router.get('/user-profile', authenticateJWT, async (req, res) => {
     }
 });
 
+// Update profile Image
+router.put('/image', authenticateJWT, async (req, res) => {
+    try {
+      const { image } = req.body;
+      const user = await User.findByIdAndUpdate(req.user.id, { profileImage: image }, { new: true });
+      res.json({ message: 'Profile image updated successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating profile image', error: error.message });
+    }
+  });
+
 // Update theme
 router.put('/theme', authenticateJWT, async (req, res) => {
     try {
