@@ -7,7 +7,10 @@ exports.sendEmail = async (emailData) => {
     console.log('Received email request:', emailData);
 
     let msg = {
-        from: 'swiftierankinghub@gmail.com',
+        from: {
+            email: 'swiftierankinghub@gmail.com',
+            name: 'Swiftie Ranking Hub'
+        },
     };
 
     switch (type) {

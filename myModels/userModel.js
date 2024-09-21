@@ -33,8 +33,8 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  theme: String,
-  profileImage: String,
+  theme: { type: String, default: 'default' },
+  profileImage: { type: String, default: '' },
   loginCount: { type: Number, default: 0 },
   profileQuestions: [{
     question: String,

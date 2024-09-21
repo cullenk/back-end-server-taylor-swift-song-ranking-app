@@ -202,4 +202,38 @@ router.put('/eras-tour-set-list', authenticateJWT, async (req, res) => {
     }
 });
 
+// Get user's top 5 albums
+router.get('/user/top-five-albums', authenticateJWT, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId);
+        if (!user || !user.rankings || !user.rankings.albumRankings || !user.rankings.albumRankings.allAlbums) {
+            return res.status(404).json({ message: 'Top albums not found' });
+        }
+        const topFiveAlbums = user.rankings.albumRankings.allAlbums
+            .sort((a, b) => a.rank - b.rank)
+            .slice(0, 5);
+        res.json(topFiveAlbums);
+    } catch (error) {
+        console.error('Error fetching top 5 albums:', error);
+        res.status(500).json({ message: 'Error fetching top 5 albums', error: error.message });
+    }
+});
+
+// Get user's top 5 albums (public)
+router.get('/user/:username/top-five-albums', async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username });
+        if (!user || !user.rankings || !user.rankings.albumRankings || !user.rankings.albumRankings.allAlbums) {
+            return res.status(404).json({ message: 'Top albums not found' });
+        }
+        const topFiveAlbums = user.rankings.albumRankings.allAlbums
+            .sort((a, b) => a.rank - b.rank)
+            .slice(0, 5);
+        res.json(topFiveAlbums);
+    } catch (error) {
+        console.error('Error fetching top 5 albums:', error);
+        res.status(500).json({ message: 'Error fetching top 5 albums', error: error.message });
+    }
+});
+
 module.exports = router;
