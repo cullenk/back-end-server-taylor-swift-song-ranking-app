@@ -11,7 +11,7 @@ const albumRankingSchema = new mongoose.Schema({
 const rankingSchema = new mongoose.Schema({
   slot: Number,
   albumName: String,
-  songId: { type: mongoose.Schema.Types.ObjectId },
+  songId: { type: mongoose.Schema.Types.ObjectId, ref: 'Song', default: null },
   songTitle: String,
   albumCover: String,
   rank: Number

@@ -81,49 +81,63 @@ router.get('/rankings', authenticateJWT, async (req, res) => {
     }
 });
 
+
 // Update entire top 13 list
 router.put('/user/top-thirteen', authenticateJWT, async (req, res) => {
     try {
-      const user = await User.findById(req.user.userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      // Validate the incoming list
-      if (!Array.isArray(req.body) || req.body.length !== 13) {
-        return res.status(400).json({ message: 'Invalid top 13 list format' });
-      }
-  
-      // Validate each item in the list
-      const validatedList = req.body.map((item, index) => ({
-        slot: index + 1,
-        albumName: item.albumName || '',
-        songId: item.songId || '',
-        songTitle: item.songTitle || '',
-        albumCover: item.albumCover || ''
-      }));
-  
-      // Update the user's top 13 list
-      user.rankings.topThirteen = validatedList;
-  
-      await user.save();
-  
-      // Return the updated list
-      res.json(user.rankings.topThirteen);
+        const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Validate the incoming list
+        if (!Array.isArray(req.body)) {
+            return res.status(400).json({ message: 'Invalid top 13 list format' });
+        }
+
+        // Validate and filter each item in the list
+        const validatedList = req.body
+            .filter(item => item.songId && item.songId.trim() !== '') // Filter out items with empty songId
+            .map((item, index) => ({
+                slot: index + 1, // Reassign slots based on filtered list
+                albumName: item.albumName || '',
+                songId: item.songId || '',
+                songTitle: item.songTitle || '',
+                albumCover: item.albumCover || ''
+            }));
+
+        // Pad the list with empty slots if less than 13 items
+        while (validatedList.length < 13) {
+            validatedList.push({
+                slot: validatedList.length + 1,
+                albumName: '',
+                songId: '',
+                songTitle: '',
+                albumCover: ''
+            });
+        }
+
+        // Update the user's top 13 list
+        user.rankings.topThirteen = validatedList;
+
+        await user.save();
+
+        // Return the updated list
+        res.json(user.rankings.topThirteen);
     } catch (error) {
-      console.error('Error updating entire top 13 list:', error);
-      if (error.name === 'ValidationError') {
-        return res.status(400).json({ 
-          message: 'Invalid data in top 13 list', 
-          error: error.message 
+        console.error('Error updating entire top 13 list:', error);
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ 
+                message: 'Invalid data in top 13 list', 
+                error: error.message 
+            });
+        }
+        res.status(500).json({ 
+            message: 'Error updating entire top 13 list', 
+            error: error.message 
         });
-      }
-      res.status(500).json({ 
-        message: 'Error updating entire top 13 list', 
-        error: error.message 
-      });
     }
-  });
+});
 
 // Update all albums ranking list
 router.put('/allAlbumsRanking/allAlbumsRanking', authenticateJWT, async (req, res) => {
