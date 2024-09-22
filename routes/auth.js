@@ -10,6 +10,15 @@ const { sendEmail } = require('../controllers/email.controller');
 // User sign-up endpoint and behavior
 router.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
+    const lowercaseEmail = email.toLowerCase();
+
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+        return res.status(400).json({ 
+            message: 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+        });
+    }
 
     try {
         // Check if user already exists
@@ -22,7 +31,7 @@ router.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new user document in MongoDB
-        const newUser = new User({ username, email, password: hashedPassword });
+        const newUser = new User({ username, email: lowercaseEmail, password: hashedPassword });
         await newUser.save();
 
         // Send welcome email
@@ -66,8 +75,12 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
+        const lowercaseUsername = username.toLowerCase();
         const user = await User.findOne({
-            $or: [{ username: username }, { email: username }]
+            $or: [
+                { username: { $regex: new RegExp('^' + lowercaseUsername + '$', 'i') } },
+                { email: lowercaseUsername }
+            ]
         });
         if (!user) {
             return res.status(401).json({ message: 'User not found' });
@@ -105,9 +118,10 @@ router.post('/login', async (req, res) => {
 //Forgot Password Endpoint
 router.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
+    const lowercaseEmail = email.toLowerCase();
   
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: lowercaseEmail });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

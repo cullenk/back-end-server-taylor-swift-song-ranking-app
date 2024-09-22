@@ -81,6 +81,50 @@ router.get('/rankings', authenticateJWT, async (req, res) => {
     }
 });
 
+// Update entire top 13 list
+router.put('/user/top-thirteen', authenticateJWT, async (req, res) => {
+    try {
+      const user = await User.findById(req.user.userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Validate the incoming list
+      if (!Array.isArray(req.body) || req.body.length !== 13) {
+        return res.status(400).json({ message: 'Invalid top 13 list format' });
+      }
+  
+      // Validate each item in the list
+      const validatedList = req.body.map((item, index) => ({
+        slot: index + 1,
+        albumName: item.albumName || '',
+        songId: item.songId || '',
+        songTitle: item.songTitle || '',
+        albumCover: item.albumCover || ''
+      }));
+  
+      // Update the user's top 13 list
+      user.rankings.topThirteen = validatedList;
+  
+      await user.save();
+  
+      // Return the updated list
+      res.json(user.rankings.topThirteen);
+    } catch (error) {
+      console.error('Error updating entire top 13 list:', error);
+      if (error.name === 'ValidationError') {
+        return res.status(400).json({ 
+          message: 'Invalid data in top 13 list', 
+          error: error.message 
+        });
+      }
+      res.status(500).json({ 
+        message: 'Error updating entire top 13 list', 
+        error: error.message 
+      });
+    }
+  });
+
 // Update all albums ranking list
 router.put('/allAlbumsRanking/allAlbumsRanking', authenticateJWT, async (req, res) => {
     const { rankings } = req.body;
@@ -235,5 +279,57 @@ router.get('/user/:username/top-five-albums', async (req, res) => {
         res.status(500).json({ message: 'Error fetching top 5 albums', error: error.message });
     }
 });
+
+// In your rankings router file
+router.get('/album-popularity', async (req, res) => {
+    try {
+        const users = await User.find({ 'rankings.albumRankings.allAlbums': { $exists: true } });
+        const albumScores = {};
+
+        users.forEach(user => {
+            user.rankings.albumRankings.allAlbums.forEach((album, index) => {
+                if (!albumScores[album.albumName]) {
+                    albumScores[album.albumName] = { score: 0, cover: album.albumCover };
+                }
+                albumScores[album.albumName].score += (10 - index); // 10 points for 1st, 9 for 2nd, etc.
+            });
+        });
+
+        const sortedAlbums = Object.entries(albumScores)
+            .sort(([,a], [,b]) => b.score - a.score)
+            .map(([albumName, data], index) => ({
+                rank: index + 1,
+                albumName,
+                albumCover: data.cover,
+                score: data.score
+            }));
+
+        res.json(sortedAlbums);
+    } catch (error) {
+        console.error('Error calculating album popularity:', error);
+        res.status(500).json({ message: 'Error calculating album popularity', error: error.message });
+    }
+});
+
+//Get all surprise songs for home page
+router.get('/surprise-songs', async (req, res) => {
+    try {
+      const users = await User.find({ 'erasTourSetList': { $exists: true, $ne: [] } });
+      
+      const surpriseSongs = users.map(user => {
+        const surpriseSongEra = user.erasTourSetList.find(era => era.era === 'Surprise Songs');
+        return {
+          username: user.username,
+          guitar: surpriseSongEra?.songs[0]?.title || 'Not set',
+          piano: surpriseSongEra?.songs[1]?.title || 'Not set'
+        };
+      }).filter(song => song.guitar !== 'Not set' || song.piano !== 'Not set');
+  
+      res.json(surpriseSongs);
+    } catch (error) {
+      console.error('Error fetching surprise songs:', error);
+      res.status(500).json({ message: 'Error fetching surprise songs', error: error.message });
+    }
+  });
 
 module.exports = router;

@@ -107,19 +107,25 @@ router.get('/albumBySong', async (req, res) => {
   
   router.get('/songSearch', async (req, res) => {
     try {
-      const searchQuery = req.query.q;
+      const searchQuery = req.query.q.trim().replace(/\s+/g, ' ');
+      const searchRegex = new RegExp(searchQuery.split(' ').map(term => `(?=.*${term})`).join(''), 'i');
       const albums = await Album.find({
-        'songs.title': { $regex: new RegExp(searchQuery, 'i') }
+        'songs.title': { $regex: searchRegex }
       });
-  
       const matchingSongs = albums.flatMap((album) =>
         album.songs.filter((song) =>
-          song.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+          searchRegex.test(song.title)
+        ).map(song => ({
+          _id: song._id,
+          title: song.title,
+          album: album.title,
+          albumImageSource: album.albumCover,
+          audioSource: song.audioSource
+        }))
       );
-  
       res.json(matchingSongs);
     } catch (err) {
+      console.error('Error in /songSearch:', err);
       res.status(500).json({ message: err.message });
     }
   });
