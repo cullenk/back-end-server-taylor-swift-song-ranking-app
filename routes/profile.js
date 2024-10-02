@@ -131,4 +131,18 @@ router.get('/:username/has-completed-eras-tour', async (req, res) => {
     }
 });
 
+
+// Get all public profiles
+router.get('/all-public-profiles', async (req, res) => {
+  try {
+    const users = await User.find().select('username profileImage theme');
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching all public profiles:', error);
+    res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
+  }
+});
+
+module.exports = router;
+
 module.exports = router;
