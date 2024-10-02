@@ -12,6 +12,14 @@ router.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
     const lowercaseEmail = email.toLowerCase();
 
+  // Username validation
+  const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+  if (!usernameRegex.test(username)) {
+      return res.status(400).json({ 
+          message: 'Username must be 3-30 characters long and can only contain letters, numbers, and underscores.'
+      });
+  }
+
     // Password validation
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
