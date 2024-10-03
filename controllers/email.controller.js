@@ -14,15 +14,15 @@ exports.sendEmail = async (emailData) => {
     };
 
     switch (type) {
-        case 'welcome':
-            console.log('Preparing welcome email');
-            msg = {
-                ...msg,
-                to: to,
-                templateId: 'd-18cfc907ab664abfa9d40a079ac3c2f8',
-                dynamicTemplateData: { name }
-            };
-            break;
+        // case 'welcome':
+        //     console.log('Preparing welcome email');
+        //     msg = {
+        //         ...msg,
+        //         to: to,
+        //         templateId: 'd-18cfc907ab664abfa9d40a079ac3c2f8',
+        //         dynamicTemplateData: { name }
+        //     };
+        //     break;
 
         case 'contact':
             console.log('Preparing contact form email');

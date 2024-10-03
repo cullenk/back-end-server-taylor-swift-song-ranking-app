@@ -42,17 +42,17 @@ router.post('/signup', async (req, res) => {
         const newUser = new User({ username, email: lowercaseEmail, password: hashedPassword });
         await newUser.save();
 
-        // Send welcome email
-        try {
-            await sendEmail({
-                to: email,
-                name: username,
-                type: 'welcome'
-            });
-        } catch (emailError) {
-            console.error('Error sending welcome email:', emailError);
-            // Don't return here, continue with the signup process
-        }
+        // // Send welcome email
+        // try {
+        //     await sendEmail({
+        //         to: email,
+        //         name: username,
+        //         type: 'welcome'
+        //     });
+        // } catch (emailError) {
+        //     console.error('Error sending welcome email:', emailError);
+        //     // Don't return here, continue with the signup process
+        // }
 
         // Send notification email to admin
         try {
