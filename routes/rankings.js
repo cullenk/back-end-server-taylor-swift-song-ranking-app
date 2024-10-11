@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../myModels/userModel');
+const Album = require('../myModels/albumModel');
 const authenticateJWT = require('../middleware/auth');
 
 // Get user's top 13 list
@@ -215,6 +216,143 @@ router.put('/rankings/:listName', authenticateJWT, async (req, res) => {
     }
 });
 
+// Get track rankings
+router.get('/track-rankings', authenticateJWT, async (req, res) => {
+    try {
+      const user = await User.findById(req.user.userId);
+      if (!user || !user.rankings || !user.rankings.trackRankings) {
+        console.log('Track rankings not found for user');
+        return res.json([]); // Return an empty array if no rankings found
+      }
+      console.log('Sending track rankings:', user.rankings.trackRankings);
+      res.json(user.rankings.trackRankings);
+    } catch (error) {
+      console.error('Error fetching track rankings:', error);
+      res.status(500).json({ message: 'Error fetching track rankings', error: error.message });
+    }
+  });
+
+// Save track rankings
+router.put('/track-rankings', authenticateJWT, async (req, res) => {
+    const { trackRankings } = req.body;
+  
+    try {
+      let user = await User.findById(req.user.userId);
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+  
+      if (!user.rankings) {
+        user.rankings = {};
+      }
+  
+      user.rankings.trackRankings = trackRankings.map(track => 
+        track.map(item => ({
+          songId: item.songId,
+          songTitle: item.songTitle,
+          albumName: item.albumName,
+          audioSource: item.audioSource,
+          albumImageSource: item.albumImageSource,
+          rank: item.rank
+        }))
+      );
+  
+      await user.save();
+  
+      res.json(user.rankings.trackRankings);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  });
+//Get All Songs
+  router.get('/all-songs', async (req, res) => {
+    try {
+      const allSongs = await Album.aggregate([
+        { $unwind: '$songs' },
+        { $project: {
+          songId: '$songs._id',
+          songTitle: '$songs.title',
+          albumName: '$title',
+          audioSource: '$songs.audioSource',
+          albumImageSource: '$songs.albumImageSource'
+        }}
+      ]);
+      res.json(allSongs);
+    } catch (error) {
+      console.error('Error fetching all songs:', error);
+      res.status(500).json({ message: 'Error fetching all songs', error: error.message });
+    }
+  });
+
+  // Get all songs ranking
+  router.get('/all-songs-ranking', authenticateJWT, async (req, res) => {
+    console.log('All songs ranking route hit');
+    try {
+      const user = await User.findById(req.user.userId);
+      if (user && user.rankings && user.rankings.allSongsRanking && user.rankings.allSongsRanking.length > 0) {
+        return res.json(user.rankings.allSongsRanking);
+      }
+  
+      // If user has no rankings, create default ranking
+      const albums = await Album.find().sort({ releaseYear: 1 });
+      let defaultRanking = [];
+      let rank = 1;
+  
+      for (const album of albums) {
+        console.log('Album:', album.title, 'Album Cover:', album.albumCover);
+        for (const song of album.songs) {
+          console.log('Song:', song.title, 'Song Album Cover:', song.albumCover);
+            console.log('Song object:', song);
+          defaultRanking.push({
+            songId: song._id.toString(),
+            songTitle: song.title,
+            albumName: album.title,
+            audioSource: song.audioSource,
+            rank: rank++,
+            albumImageSource: song.albumImageSource || album.albumCover
+          });
+        }
+      }
+  
+      // If user exists, save this default ranking
+      if (user) {
+        user.rankings = user.rankings || {};
+        user.rankings.allSongsRanking = defaultRanking;
+        await user.save();
+      }
+      console.log(defaultRanking[3])
+      res.json(defaultRanking);
+    } catch (error) {
+      console.error('Error fetching all songs ranking:', error);
+      res.status(500).json({ message: 'Error fetching all songs ranking', error: error.message });
+    }
+  });
+  
+  // Save all songs ranking
+  router.put('/all-songs-ranking', authenticateJWT, async (req, res) => {
+    const { ranking } = req.body;
+  
+    try {
+      let user = await User.findById(req.user.userId);
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+  
+      if (!user.rankings) {
+        user.rankings = {};
+      }
+  
+      user.rankings.allSongsRanking = ranking;
+  
+      await user.save();
+  
+      res.json(user.rankings.allSongsRanking);
+    } catch (err) {
+      console.error('Error saving all songs ranking:', err);
+      res.status(500).send('Server Error');
+    }
+  });
 
 // Get Eras Tour Set List
 router.get('/eras-tour-set-list', authenticateJWT, async (req, res) => {

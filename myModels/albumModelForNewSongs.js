@@ -4,7 +4,7 @@ const songSchema = new mongoose.Schema({
     title: String,
     audioSource: String,
     albumImageSource: String,
-    albumName: String 
+    album: String 
 });
 
 const albumSchema = new mongoose.Schema({
@@ -14,6 +14,6 @@ const albumSchema = new mongoose.Schema({
     songs: [songSchema]
 });
 
-const Album = mongoose.model('Album', albumSchema);
+const AlbumModelForNewSongs = mongoose.model('AlbumModelForNewSongs', albumSchema);
 
-module.exports = Album;
+module.exports = AlbumModelForNewSongs;

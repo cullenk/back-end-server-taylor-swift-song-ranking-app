@@ -58,7 +58,23 @@ const userSchema = new mongoose.Schema({
       theTorturedPoetsDepartment: [rankingSchema],
       standaloneSingles: [rankingSchema],
       allAlbums: [albumRankingSchema]
-    }
+    },
+    trackRankings: [[{
+      songId: String,
+      songTitle: String,
+      albumName: String,
+      audioSource: String,
+      rank: Number,
+      albumImageSource: String,
+    }]],
+    allSongsRanking: [{
+      songId: String,
+      songTitle: String,
+      albumName: String,
+      audioSource: String,
+      rank: Number,
+      albumImageSource: String,
+    }],
   },
   erasTourSetList: [eraSetListSchema]
 });
