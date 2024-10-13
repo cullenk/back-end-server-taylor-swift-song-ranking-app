@@ -12,47 +12,47 @@ router.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
     const lowercaseEmail = email.toLowerCase();
 
-  // Username validation
-  const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
-  if (!usernameRegex.test(username)) {
-      return res.status(400).json({ 
-          message: 'Username must be 3-30 characters long and can only contain letters, numbers, and underscores.'
-      });
-  }
-
-    // Password validation
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordRegex.test(password)) {
-        return res.status(400).json({ 
-            message: 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
-        });
-    }
-
     try {
-        // Check if user already exists
-        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Username or email already exists' });
+        // Check username availability
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).json({ 
+                field: 'username',
+                message: 'This username is already taken. Please choose a different one.'
+            });
         }
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // Check email availability
+        const existingEmail = await User.findOne({ email: lowercaseEmail });
+        if (existingEmail) {
+            return res.status(400).json({ 
+                field: 'email',
+                message: 'An account with this email already exists. Please use a different email or try logging in.'
+            });
+        }
 
-        // Create a new user document in MongoDB
+        // Username validation
+        const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+        if (!usernameRegex.test(username)) {
+            return res.status(400).json({ 
+                field: 'username',
+                message: 'Username must be 3-30 characters long and can only contain letters, numbers, and underscores.'
+            });
+        }
+
+        // Password validation
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ 
+                field: 'password',
+                message: 'Password must be at least 6 characters long and include at least one uppercase letter and one number.'
+            });
+        }
+
+        // If all checks pass, proceed with user creation
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ username, email: lowercaseEmail, password: hashedPassword });
         await newUser.save();
-
-        // // Send welcome email
-        // try {
-        //     await sendEmail({
-        //         to: email,
-        //         name: username,
-        //         type: 'welcome'
-        //     });
-        // } catch (emailError) {
-        //     console.error('Error sending welcome email:', emailError);
-        //     // Don't return here, continue with the signup process
-        // }
 
         // Send notification email to admin
         try {
@@ -60,22 +60,18 @@ router.post('/signup', async (req, res) => {
                 to: 'swiftierankinghub@gmail.com',
                 type: 'newUser',
                 name: username,
-                email: email
+                email: lowercaseEmail
             });
-        } catch (adminEmailError) {
-            console.error('Error sending admin notification email:', adminEmailError);
+            console.log('Admin notification email sent successfully');
+        } catch (emailError) {
+            console.error('Error sending admin notification email:', emailError);
             // Don't return here, continue with the signup process
         }
 
-        // User created successfully
-        res.status(201).json({ 
-            message: 'Account created successfully, check your email for a welcome message!',
-            userId: newUser._id // Optionally send back the user ID
-        });
-
+        res.status(201).json({ message: 'Account created successfully!' });
     } catch (error) {
-        console.error('Sign Up Error:', error);
-        res.status(500).json({ message: 'Error creating user', error: error.message });
+        console.error('Signup error:', error);
+        res.status(500).json({ message: 'An error occurred during signup. Please try again.' });
     }
 });
 

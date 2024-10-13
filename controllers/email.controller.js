@@ -4,8 +4,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 exports.sendEmail = async (emailData) => {
     const { to, name, type, email, message, resetToken } = emailData;
 
-    console.log('Received email request:', emailData);
-
     let msg = {
         from: {
             email: 'swiftierankinghub@gmail.com',
@@ -14,18 +12,7 @@ exports.sendEmail = async (emailData) => {
     };
 
     switch (type) {
-        // case 'welcome':
-        //     console.log('Preparing welcome email');
-        //     msg = {
-        //         ...msg,
-        //         to: to,
-        //         templateId: 'd-18cfc907ab664abfa9d40a079ac3c2f8',
-        //         dynamicTemplateData: { name }
-        //     };
-        //     break;
-
         case 'contact':
-            console.log('Preparing contact form email');
             msg = {
                 ...msg,
                 to: 'swiftierankinghub@gmail.com',
@@ -45,8 +32,9 @@ exports.sendEmail = async (emailData) => {
             break;
 
         case 'passwordReset':
-            console.log('Preparing password reset email');
             const resetUrl = `http://www.swiftierankinghub.com/reset-password/${resetToken}`;
+            // const resetUrl = `http://localhost:4200/reset-password/${resetToken}`;
+
             msg = {
                 ...msg,
                 to: to,
@@ -62,7 +50,6 @@ exports.sendEmail = async (emailData) => {
             break;
 
         case 'newUser':
-            console.log('Preparing new user notification email');
             msg = {
                 ...msg,
                 to: 'swiftierankinghub@gmail.com',
@@ -80,9 +67,9 @@ exports.sendEmail = async (emailData) => {
     }
 
     try {
-        console.log('Attempting to send email via SendGrid:', msg);
+        console.log('Attempting to send email:', msg);
         const result = await sgMail.send(msg);
-        console.log('SendGrid response:', result);
+        console.log('Email sent successfully:', result);
         return { success: true, message: 'Email sent successfully' };
     } catch (error) {
         console.error('SendGrid error:', error);
@@ -91,4 +78,4 @@ exports.sendEmail = async (emailData) => {
         }
         throw error;
     }
-};
+}
