@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-
 const albumRankingSchema = new mongoose.Schema({
   rank: Number,
   albumName: String,
@@ -78,6 +77,17 @@ const userSchema = new mongoose.Schema({
   },
   erasTourSetList: [eraSetListSchema]
 });
+
+// Add indexes after the schema definition
+userSchema.index({ 'rankings.albumRankings.allAlbums': 1 });
+userSchema.index({ 'erasTourSetList': 1 });
+userSchema.index({ 'rankings.topThirteen': 1 });
+
+// Additional specific indexes that might be useful
+userSchema.index({ 'username': 1 });
+userSchema.index({ 'email': 1 });
+userSchema.index({ 'rankings.trackRankings': 1 });
+userSchema.index({ 'rankings.allSongsRanking': 1 });
 
 userSchema.plugin(uniqueValidator);
 

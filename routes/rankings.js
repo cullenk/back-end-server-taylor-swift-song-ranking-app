@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const User = require('../myModels/userModel');
 const Album = require('../myModels/albumModel');
 const authenticateJWT = require('../middleware/auth');
+const NodeCache = require("node-cache");
+const { ObjectID } = require('mongodb');
+const myCache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
 // Get user's top 13 list
 router.get('/user/top-thirteen', authenticateJWT, async (req, res) => {
@@ -432,56 +435,103 @@ router.get('/user/:username/top-five-albums', async (req, res) => {
     }
 });
 
-// In your rankings router file
+//Album Popularity for homepage
 router.get('/album-popularity', async (req, res) => {
     try {
-        const users = await User.find({ 'rankings.albumRankings.allAlbums': { $exists: true } });
-        const albumScores = {};
-
-        users.forEach(user => {
-            user.rankings.albumRankings.allAlbums.forEach((album, index) => {
-                if (!albumScores[album.albumName]) {
-                    albumScores[album.albumName] = { score: 0, cover: album.albumCover };
+        let result = myCache.get("album-popularity");
+        if (result == undefined) {
+            result = await User.aggregate([
+                // Match users who have album rankings
+                { 
+                    $match: { 
+                        'rankings.albumRankings.allAlbums': { $exists: true, $ne: [] } 
+                    } 
+                },
+                // Unwind the allAlbums array
+                { 
+                    $unwind: '$rankings.albumRankings.allAlbums' 
+                },
+                // Group by album name and calculate scores based on rank
+                { 
+                    $group: {
+                        _id: '$rankings.albumRankings.allAlbums.albumName', // Group by album name
+                        score: { 
+                            $sum: '$rankings.albumRankings.allAlbums.rank' // Sum ranks directly for scoring
+                        },
+                        cover: { $first: '$rankings.albumRankings.allAlbums.albumCover' } // Get the cover image for the album
+                    }
+                },
+                // Sort by score in ascending order
+                { 
+                    $sort: { score: 1 } 
+                },
+                // Project the final output structure
+                { 
+                    $project: {
+                        albumName: '$_id', // Use the grouped album name
+                        score: 1,          // Include the score
+                        albumCover: '$cover', // Include the cover image
+                        _id: 0             // Exclude the default _id field from output
+                    }
                 }
-                albumScores[album.albumName].score += (10 - index); // 10 points for 1st, 9 for 2nd, etc.
-            });
-        });
-
-        const sortedAlbums = Object.entries(albumScores)
-            .sort(([,a], [,b]) => b.score - a.score)
-            .map(([albumName, data], index) => ({
-                rank: index + 1,
-                albumName,
-                albumCover: data.cover,
-                score: data.score
-            }));
-
-        res.json(sortedAlbums);
+            ]);
+            myCache.set("album-popularity", result, 3600); // Cache for 1 hour
+        }
+        res.json(result);
     } catch (error) {
         console.error('Error calculating album popularity:', error);
         res.status(500).json({ message: 'Error calculating album popularity', error: error.message });
     }
 });
 
-//Get all surprise songs for home page
+// Get random surprise songs for home page
 router.get('/surprise-songs', async (req, res) => {
     try {
-      const users = await User.find({ 'erasTourSetList': { $exists: true, $ne: [] } });
-      
-      const surpriseSongs = users.map(user => {
-        const surpriseSongEra = user.erasTourSetList.find(era => era.era === 'Surprise Songs');
-        return {
-          username: user.username,
-          guitar: surpriseSongEra?.songs[0]?.title || 'Not set',
-          piano: surpriseSongEra?.songs[1]?.title || 'Not set'
-        };
-      }).filter(song => song.guitar !== 'Not set' || song.piano !== 'Not set');
-  
-      res.json(surpriseSongs);
+        // Check if result is in cache
+        let surpriseSongs = myCache.get("surprise-songs");
+
+        if (surpriseSongs === undefined) {
+            // If not in cache, fetch random songs from the database
+            const songs = await User.aggregate([
+                // Unwind to flatten erasTourSetList
+                { $unwind: '$erasTourSetList' },
+                // Match only 'Surprise Songs' era
+                { $match: { 'erasTourSetList.era': 'Surprise Songs' } },
+                // Group by username and collect guitar and piano songs
+                {
+                    $group: {
+                        _id: '$username',
+                        guitar: { $first: { $arrayElemAt: ['$erasTourSetList.songs', 0] } }, // First song is guitar
+                        piano: { $first: { $arrayElemAt: ['$erasTourSetList.songs', 1] } }   // Second song is piano
+                    }
+                },
+                // Ensure both guitar and piano songs are present (not null)
+                { 
+                    $match: { 
+                        guitar: { $ne: null }, 
+                        piano: { $ne: null } 
+                    } 
+                },
+                // Randomly select 20 users with valid songs
+                { $sample: { size: 20 } }
+            ]);
+
+            // Map the results to a simpler structure
+            surpriseSongs = songs.map(song => ({
+                username: song._id,
+                guitar: song.guitar.title, // Assuming title is a property of the song object
+                piano: song.piano.title      // Assuming title is a property of the song object
+            }));
+
+            // Store result in cache
+            myCache.set("surprise-songs", surpriseSongs, 3600); // Cache for 1 hour
+        }
+
+        res.json(surpriseSongs);
     } catch (error) {
-      console.error('Error fetching surprise songs:', error);
-      res.status(500).json({ message: 'Error fetching surprise songs', error: error.message });
+        console.error('Error fetching surprise songs:', error);
+        res.status(500).json({ message: 'Error fetching surprise songs', error: error.message });
     }
-  });
+});
 
 module.exports = router;

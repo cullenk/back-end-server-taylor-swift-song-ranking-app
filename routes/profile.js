@@ -131,17 +131,54 @@ router.get('/:username/has-completed-eras-tour', async (req, res) => {
     }
 });
 
-
-// Get all public profiles
+// Get all public profiles with pagination and filtering
 router.get('/all-public-profiles', async (req, res) => {
   try {
-    const users = await User.find().select('username profileImage theme');
-    res.json(users);
+      const page = parseInt(req.query.page) || 1; // Default to page 1
+      const limit = parseInt(req.query.limit) || 20; // Default to 20 profiles per page
+      const skip = (page - 1) * limit;
+
+      // Fetch users who have a profileImage and theme set
+      const users = await User.find({
+          profileImage: { $exists: true, $ne: '' },
+          theme: { $exists: true, $ne: '' }
+      })
+      .skip(skip)
+      .limit(limit)
+      .select('username profileImage theme');
+
+      // Get total count of users that match the criteria for pagination
+      const totalCount = await User.countDocuments({
+          profileImage: { $exists: true, $ne: '' },
+          theme: { $exists: true, $ne: '' }
+      });
+
+      res.json({
+          totalCount,
+          users,
+          currentPage: page,
+          totalPages: Math.ceil(totalCount / limit)
+      });
   } catch (error) {
-    console.error('Error fetching all public profiles:', error);
-    res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
+      console.error('Error fetching all public profiles:', error);
+      res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
   }
 });
 
+// Get all public profiles without pagination for global search
+router.get('/all-public-profiles/all', async (req, res) => {
+  try {
+      const users = await User.find({
+          profileImage: { $exists: true, $ne: '' },
+          theme: { $exists: true, $ne: '' }
+      }).select('username profileImage theme');
+
+      res.json(users);
+  } catch (error) {
+      console.error('Error fetching all public profiles:', error);
+      res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
+  }
+});
 
 module.exports = router;
+
