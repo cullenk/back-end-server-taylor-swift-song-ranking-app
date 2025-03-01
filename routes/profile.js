@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../myModels/userModel');
 const authenticateJWT = require('../middleware/auth');
+const sanitizeHtml = require('sanitize-html');
 
 // Get user profile
 router.get('/user-profile', authenticateJWT, async (req, res) => {
@@ -61,11 +62,20 @@ router.put('/theme', authenticateJWT, async (req, res) => {
 // Update profile questions
 router.put('/questions', authenticateJWT, async (req, res) => {
     try {
+        const sanitizedQuestions = req.body.questions.map(q => ({
+            question: sanitizeHtml(q.question),
+            answer: sanitizeHtml(q.answer, {
+                allowedTags: [], // Allow no HTML tags
+                allowedAttributes: {} // Allow no HTML attributes
+            })
+        }));
+
         const user = await User.findByIdAndUpdate(
             req.user.userId,
-            { profileQuestions: req.body.questions },
+            { profileQuestions: sanitizedQuestions },
             { new: true }
         ).select('-password');
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -133,38 +143,40 @@ router.get('/:username/has-completed-eras-tour', async (req, res) => {
 
 // Get all public profiles with pagination and filtering
 router.get('/all-public-profiles', async (req, res) => {
-  try {
-      const page = parseInt(req.query.page) || 1; // Default to page 1
-      const limit = parseInt(req.query.limit) || 20; // Default to 20 profiles per page
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
       const skip = (page - 1) * limit;
-
-      // Fetch users who have a profileImage and theme set
+  
+      // Find users who have chosen a profile image, theme and top 13 songs only
       const users = await User.find({
-          profileImage: { $exists: true, $ne: '' },
-          theme: { $exists: true, $ne: '' }
+        profileImage: { $exists: true, $ne: '' },
+        theme: { $exists: true, $ne: '' },
+        'rankings.topThirteen': { $exists: true, $ne: [] }
       })
+      .sort({ _id: -1 }) // Sort by _id descending (newest first)
       .skip(skip)
       .limit(limit)
       .select('username profileImage theme');
-
-      // Get total count of users that match the criteria for pagination
+  
       const totalCount = await User.countDocuments({
-          profileImage: { $exists: true, $ne: '' },
-          theme: { $exists: true, $ne: '' }
+        profileImage: { $exists: true, $ne: '' },
+        theme: { $exists: true, $ne: '' },
+        'rankings.topThirteen': { $exists: true, $ne: [] }
       });
-
+  
       res.json({
-          totalCount,
-          users,
-          currentPage: page,
-          totalPages: Math.ceil(totalCount / limit)
+        totalCount,
+        users,
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit)
       });
-  } catch (error) {
+    } catch (error) {
       console.error('Error fetching all public profiles:', error);
       res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
-  }
-});
-
+    }
+  });
+  
 // Get all public profiles without pagination for global search
 router.get('/all-public-profiles/all', async (req, res) => {
   try {
