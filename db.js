@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb')
-
+require('dotenv').config();
 let dbConnection;
-let uri = 'mongodb+srv://cullenkuch:thanKyouaIMee@taylorswiftcluster.72erlko.mongodb.net/?retryWrites=true&w=majority&appName=taylorSwiftCluster'
+let uri = process.env.MONGODB_URI;
 
 // Connect to the database and return the connection so the app.js file can access it
 

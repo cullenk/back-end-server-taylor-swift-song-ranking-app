@@ -1,4 +1,4 @@
-// services/emailService.js
+// I don't think use this any more
 const AWS = require('aws-sdk');
 require('dotenv').config();
 

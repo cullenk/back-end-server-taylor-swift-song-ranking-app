@@ -1,3 +1,6 @@
+/*Updates the album covers for songs in user's track rankings.
+ Might need this when repTV and debutTV come out. */
+
 const mongoose = require('mongoose');
 const User = require('./myModels/userModel');
 const Album = require('./myModels/albumModel');

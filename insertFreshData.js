@@ -1,3 +1,4 @@
+//I think I used this to add an album key to each song within an album
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
