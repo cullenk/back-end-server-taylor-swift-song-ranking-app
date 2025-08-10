@@ -12,6 +12,10 @@ router.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
     const lowercaseEmail = email.toLowerCase();
 
+     console.log('=== SIGNUP ROUTE HIT ===');
+    console.log('Signup attempt for username:', username);
+    console.log('Email:', lowercaseEmail);
+
     try {
         // Check username availability
         const existingUsername = await User.findOne({ username });
@@ -56,16 +60,25 @@ router.post('/signup', async (req, res) => {
 
         // Send notification email to admin
         try {
-            await sendEmail({
+            console.log('=== SIGNUP EMAIL START ===');
+            console.log('About to send new user email notification');
+            console.log('Username:', username);
+            console.log('Email:', lowercaseEmail);
+
+            const emailResult = await sendEmail({
                 to: 'swiftierankinghub@gmail.com',
                 type: 'newUser',
                 name: username,
                 email: lowercaseEmail
             });
+            
+            console.log('Email function result:', emailResult);
             console.log('Admin notification email sent successfully');
+            console.log('=== SIGNUP EMAIL END ===');
         } catch (emailError) {
+              console.error('=== SIGNUP EMAIL ERROR ===');
             console.error('Error sending admin notification email:', emailError);
-            // Don't return here, continue with the signup process
+            console.error('=== SIGNUP EMAIL ERROR END ===');
         }
 
         res.status(201).json({ message: 'Account created successfully!' });

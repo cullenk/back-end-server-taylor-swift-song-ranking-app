@@ -4,6 +4,9 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+
+console.log('=== SERVER STARTING ===');
+
 const app = express();
 
 const allowedOrigins = [
