@@ -3,21 +3,22 @@ const router = express.Router();
 const User = require('../myModels/userModel');
 const authenticateJWT = require('../middleware/auth');
 const sanitizeHtml = require('sanitize-html');
+const countries = require('../utils/countries');
 
 // Get user profile
 router.get('/user-profile', authenticateJWT, async (req, res) => {
     try {
-      const user = await User.findById(req.user.userId).select('-password');
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-    //   console.log('Sending user profile:', user);
-      res.json(user);
+        const user = await User.findById(req.user.userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        //   console.log('Sending user profile:', user);
+        res.json(user);
     } catch (error) {
-      console.error('Error fetching user profile:', error);
-      res.status(500).json({ message: 'Error fetching user profile', error: error.message });
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ message: 'Error fetching user profile', error: error.message });
     }
-  });
+});
 
 
 // Update profile Image
@@ -86,29 +87,6 @@ router.put('/questions', authenticateJWT, async (req, res) => {
     }
 });
 
-// Sharing a user profile publicly
-router.get('/public-profile/:username', async (req, res) => {
-    try {
-      const user = await User.findOne({ username: req.params.username }).select('-password -email');
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      const publicProfile = {
-        username: user.username,
-        rankings: user.rankings,
-        theme: user.theme,
-        profileImage: user.profileImage, 
-        profileQuestions: user.profileQuestions
-      };
-  
-      res.json(publicProfile);
-    } catch (error) {
-      console.error('Error fetching public profile:', error);
-      res.status(500).json({ message: 'Error fetching public profile', error: error.message });
-    }
-  });
-
 // Get eras tour set list by username
 router.get('/eras-tour-set-list/:username', async (req, res) => {
     try {
@@ -130,10 +108,10 @@ router.get('/:username/has-completed-eras-tour', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        
+
         // Check if the user has a non-empty erasTourSetList
         const hasCompletedSetlist = user.erasTourSetList && user.erasTourSetList.length > 0;
-        
+
         res.json({ hasCompletedSetlist });
     } catch (error) {
         console.error('Error checking Eras Tour setlist:', error);
@@ -142,55 +120,184 @@ router.get('/:username/has-completed-eras-tour', async (req, res) => {
 });
 
 // Get all public profiles with pagination and filtering
+// Update the public profile endpoint
+router.get('/public-profile/:username', async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username }).select('-password -email');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const publicProfile = {
+            username: user.username,
+            rankings: user.rankings,
+            theme: user.theme,
+            profileImage: user.profileImage,
+            profileQuestions: user.profileQuestions,
+            loginCount: user.loginCount,
+            country: user.country, 
+        };
+
+        res.json(publicProfile);
+    } catch (error) {
+        console.error('Error fetching public profile:', error);
+        res.status(500).json({ message: 'Error fetching public profile', error: error.message });
+    }
+});
+
+// Update the all public profiles endpoint
 router.get('/all-public-profiles', async (req, res) => {
     try {
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 20;
-      const skip = (page - 1) * limit;
-  
-      // Find users who have chosen a profile image, theme and top 13 songs only
-      const users = await User.find({
-        profileImage: { $exists: true, $ne: '' },
-        theme: { $exists: true, $ne: '' },
-        'rankings.topThirteen': { $exists: true, $ne: [] }
-      })
-      .sort({ _id: -1 }) // Sort by _id descending (newest first)
-      .skip(skip)
-      .limit(limit)
-      .select('username profileImage theme');
-  
-      const totalCount = await User.countDocuments({
-        profileImage: { $exists: true, $ne: '' },
-        theme: { $exists: true, $ne: '' },
-        'rankings.topThirteen': { $exists: true, $ne: [] }
-      });
-  
-      res.json({
-        totalCount,
-        users,
-        currentPage: page,
-        totalPages: Math.ceil(totalCount / limit)
-      });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const users = await User.find({
+            profileImage: { $exists: true, $ne: '' },
+            theme: { $exists: true, $ne: '' },
+            'rankings.topThirteen': { $exists: true, $ne: [] }
+        })
+            .sort({ _id: -1 })
+            .skip(skip)
+            .limit(limit)
+            .select('username profileImage theme country');
+
+        const totalCount = await User.countDocuments({
+            profileImage: { $exists: true, $ne: '' },
+            theme: { $exists: true, $ne: '' },
+            'rankings.topThirteen': { $exists: true, $ne: [] }
+        });
+
+        // Transform to include like count
+        const transformedUsers = users.map(user => ({
+            username: user.username,
+            profileImage: user.profileImage,
+            theme: user.theme,
+            country: user.country,
+        }));
+
+        res.json({
+            totalCount,
+            users: transformedUsers,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / limit)
+        });
     } catch (error) {
-      console.error('Error fetching all public profiles:', error);
-      res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
+        console.error('Error fetching all public profiles:', error);
+        res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
     }
-  });
-  
+});
+
 // Get all public profiles without pagination for global search
 router.get('/all-public-profiles/all', async (req, res) => {
-  try {
-      const users = await User.find({
-          profileImage: { $exists: true, $ne: '' },
-          theme: { $exists: true, $ne: '' }
-      }).select('username profileImage theme');
+    try {
+        const users = await User.find({
+            profileImage: { $exists: true, $ne: '' },
+            theme: { $exists: true, $ne: '' }
+        }).select('username profileImage theme');
 
-      res.json(users);
-  } catch (error) {
-      console.error('Error fetching all public profiles:', error);
-      res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
-  }
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching all public profiles:', error);
+        res.status(500).json({ message: 'Error fetching public profiles', error: error.message });
+    }
 });
+
+// Get list of available countries
+router.get('/countries', async (req, res) => {
+    try {
+        res.json(countries);
+    } catch (error) {
+        console.error('Error fetching countries:', error);
+        res.status(500).json({ message: 'Error fetching countries', error: error.message });
+    }
+});
+
+// Update user country (with validation)
+router.put('/country', authenticateJWT, async (req, res) => {
+    try {
+        const { country } = req.body;
+
+        // Validate country selection
+        if (country && !countries.includes(country)) {
+            return res.status(400).json({
+                message: 'Invalid country selection. Please choose from the provided list.'
+            });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.user.userId,
+            { country: country || null }, // Allow setting to null to remove
+            { new: true, runValidators: true } // Enable mongoose validation
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error updating country:', error);
+
+        // Handle validation errors
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                message: 'Validation error',
+                error: error.message
+            });
+        }
+
+        res.status(500).json({ message: 'Error updating country', error: error.message });
+    }
+});
+
+
+// Enhanced country statistics
+router.get('/country-stats', async (req, res) => {
+    try {
+        const countryStats = await User.aggregate([
+            {
+                $match: {
+                    country: { $exists: true, $ne: null, $ne: '' }
+                }
+            },
+            {
+                $group: {
+                    _id: '$country',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { count: -1 }
+            },
+            {
+                $project: {
+                    country: '$_id',
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ]);
+
+        // Get total users with countries set
+        const totalUsersWithCountry = countryStats.reduce((sum, stat) => sum + stat.count, 0);
+
+        // Calculate percentages
+        const statsWithPercentages = countryStats.map(stat => ({
+            ...stat,
+            percentage: ((stat.count / totalUsersWithCountry) * 100).toFixed(1)
+        }));
+
+        res.json({
+            totalUsersWithCountry,
+            countries: statsWithPercentages
+        });
+    } catch (error) {
+        console.error('Error fetching country stats:', error);
+        res.status(500).json({ message: 'Error fetching country stats', error: error.message });
+    }
+});
+
 
 module.exports = router;
 

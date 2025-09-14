@@ -15,8 +15,27 @@ router.get('/user/top-thirteen', authenticateJWT, async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        const sortedTopThirteen = user.rankings.topThirteen.sort((a, b) => a.slot - b.slot);
-        res.json(sortedTopThirteen);
+
+        const userTopThirteen = user.rankings?.topThirteen || [];
+        
+        // Always return a padded list of 13 slots for frontend consistency
+        const paddedList = [];
+        for (let i = 1; i <= 13; i++) {
+            const existingSong = userTopThirteen.find(item => item.slot === i);
+            if (existingSong) {
+                paddedList.push(existingSong);
+            } else {
+                paddedList.push({
+                    slot: i,
+                    albumName: '',
+                    songId: '',
+                    songTitle: '',
+                    albumCover: ''
+                });
+            }
+        }
+
+        res.json(paddedList);
     } catch (error) {
         console.error('Error fetching top 13 list:', error);
         res.status(500).json({ message: 'Error fetching top 13 list', error: error.message });
@@ -99,35 +118,42 @@ router.put('/user/top-thirteen', authenticateJWT, async (req, res) => {
             return res.status(400).json({ message: 'Invalid top 13 list format' });
         }
 
-        // Validate and filter each item in the list
-        const validatedList = req.body
-            .filter(item => item.songId && item.songId.trim() !== '') // Filter out items with empty songId
+        // Filter out items with empty songId and validate the remaining items
+        const validSongs = req.body
+            .filter(item => item.songId && item.songId.trim() !== '')
             .map((item, index) => ({
                 slot: index + 1, // Reassign slots based on filtered list
                 albumName: item.albumName || '',
-                songId: item.songId || '',
+                songId: item.songId,
                 songTitle: item.songTitle || '',
                 albumCover: item.albumCover || ''
             }));
 
-        // Pad the list with empty slots if less than 13 items
-        while (validatedList.length < 13) {
-            validatedList.push({
-                slot: validatedList.length + 1,
-                albumName: '',
-                songId: '',
-                songTitle: '',
-                albumCover: ''
-            });
-        }
-
-        // Update the user's top 13 list
-        user.rankings.topThirteen = validatedList;
+        // IMPORTANT: Only save the valid songs, don't pad with empty slots
+        // The frontend will handle padding for display purposes
+        user.rankings = user.rankings || {};
+        user.rankings.topThirteen = validSongs;
 
         await user.save();
 
-        // Return the updated list
-        res.json(user.rankings.topThirteen);
+        // Return the full padded list for frontend consistency
+        const paddedList = [];
+        for (let i = 1; i <= 13; i++) {
+            const existingSong = validSongs.find(song => song.slot === i);
+            if (existingSong) {
+                paddedList.push(existingSong);
+            } else {
+                paddedList.push({
+                    slot: i,
+                    albumName: '',
+                    songId: '',
+                    songTitle: '',
+                    albumCover: ''
+                });
+            }
+        }
+
+        res.json(paddedList);
     } catch (error) {
         console.error('Error updating entire top 13 list:', error);
         if (error.name === 'ValidationError') {

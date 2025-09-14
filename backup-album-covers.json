@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-09-14T20:16:12.031Z",
+  "totalAlbums": 12,
+  "albums": {
+    "1989 (Taylor's Version)": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/1989.jpeg",
+    "Lover": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/lover.jpg",
+    "evermore": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/evermore.jpeg",
+    "Fearless (Taylor's Version)": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/fearless_taylors_version_album.jpg",
+    "folklore": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/folklore.jpg",
+    "Midnights": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/midnights.jpeg",
+    "Red (Taylor's Version)": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/red-tv.jpeg",
+    "reputation": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/reputation.jpg",
+    "Singles": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/singles/Singles.svg",
+    "Speak Now (Taylor's Version)": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/speak-now-tv.jpg",
+    "Taylor Swift": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/Taylor+Swift.jpg",
+    "The Tortured Poets Department": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.png"
+  }
+}

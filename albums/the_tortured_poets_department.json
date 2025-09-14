@@ -1,192 +1,192 @@
 {
   "title": "The Tortured Poets Department",
   "releaseYear": 2024,
-  "albumCover": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+  "albumCover": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
   "songs": [
     {
       "title": "Fortnight (feat. Post Malone)",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Fortnight+(feat.+Post+Malone).mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Tortured Poets Department",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Tortured+Poets+Department.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "My Boy Only Breaks His Favorite Toys",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/My+Boy+Only+Breaks+His+Favorite+Toys.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Down Bad",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Down+Bad.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "So Long, London",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/So+Long%2C+London.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "But Daddy I Love Him",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/But+Daddy+I+Love+Him.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Fresh Out The Slammer",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Fresh+Out+The+Slammer.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Florida!!! (feat. Florence + the Machine)",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Florida!!!+(feat.+Florence+%2B+The+Machine).mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Guilty as Sin?",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Guilty+as+Sin.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Who's Afraid of Little Old Me?",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Who%E2%80%99s+Afraid+of+Little+Old+Me.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "I Can Fix Him (No Really I Can)",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/I+Can+Fix+Him+(No+Really+I+Can).mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "loml",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/loml.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "I Can Do It With a Broken Heart",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/I+Can+Do+It+With+a+Broken+Heart.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Smallest Man Who Ever Lived",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Smallest+Man+Who+Ever+Lived.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Alchemy",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Alchemy.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Clara Bow",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Clara+Bow.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/ttpd1.png",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd1.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Black Dog",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Black+Dog.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "imgonnagetyouback",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/imgonnagetyouback.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Albatross",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Albatross.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Chloe or Sam or Sophia or Marcus",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Chloe+or+Sam+or+Sophia+or+Marcus.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "How Did It End?",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/How+Did+It+End%3F.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "So High School",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/So+High+School.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "I Hate It Here",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/I+Hate+It+Here.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "ThanK you aIMee",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/thanK+you+aIMee.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "I Look in People's Windows",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/I+Look+in+People's+Windows.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Prophecy",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Prophecy.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Cassandra",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Cassandra.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Peter",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Peter.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Bolter",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Bolter.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "Robin",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/Robin.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     },
     {
       "title": "The Manuscript",
       "audioSource": "https://all-taylor-swift-albums.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department/The+Manuscript.mp3",
-      "albumImageSource": "https://all-taylor-swift-album-covers.s3.us-east-2.amazonaws.com/The+Tortured+Poets+Department.jpeg",
+      "albumImageSource": "https://d3e29z0m37b0un.cloudfront.net/ttpd.webp",
       "album": "The Tortured Poets Department"
     }
   ]

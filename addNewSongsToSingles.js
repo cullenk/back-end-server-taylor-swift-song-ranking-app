@@ -1,6 +1,6 @@
 /*This apparently deletes everything in an album and replaces it with the 
 songs defined in the newSongs array. Not sure if this is the one I used to update singles? 
-It worked correctly and appended these 11 to the exiting Singles album... */
+It worked correctly and appended these 11 to the existing Singles album... */
 
 const mongoose = require('mongoose');
 const AlbumModelForNewSongs = require('./myModels/albumModelForNewSongs');
