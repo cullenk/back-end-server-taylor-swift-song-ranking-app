@@ -145,7 +145,7 @@ router.get('/public-profile/:username', async (req, res) => {
     }
 });
 
-// Update the all public profiles endpoint
+// Get all public profiles with pagination and filtering
 router.get('/all-public-profiles', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -153,9 +153,12 @@ router.get('/all-public-profiles', async (req, res) => {
         const skip = (page - 1) * limit;
 
         const users = await User.find({
-            profileImage: { $exists: true, $ne: '' },
-            theme: { $exists: true, $ne: '' },
-            'rankings.topThirteen': { $exists: true, $ne: [] }
+            // Has a selected theme (not default/empty)
+            theme: { $exists: true, $ne: '', $ne: 'default' },
+            // Has items in topThirteen list
+            'rankings.topThirteen': { $exists: true, $ne: [] },
+            // Has albumRankings set (check if allAlbums exists and is not empty)
+            'rankings.albumRankings.allAlbums': { $exists: true, $ne: [] }
         })
             .sort({ _id: -1 })
             .skip(skip)
@@ -163,15 +166,14 @@ router.get('/all-public-profiles', async (req, res) => {
             .select('username profileImage theme country');
 
         const totalCount = await User.countDocuments({
-            profileImage: { $exists: true, $ne: '' },
-            theme: { $exists: true, $ne: '' },
-            'rankings.topThirteen': { $exists: true, $ne: [] }
+            theme: { $exists: true, $ne: '', $ne: 'default' },
+            'rankings.topThirteen': { $exists: true, $ne: [] },
+            'rankings.albumRankings.allAlbums': { $exists: true, $ne: [] }
         });
 
-        // Transform to include like count
         const transformedUsers = users.map(user => ({
             username: user.username,
-            profileImage: user.profileImage,
+            profileImage: user.profileImage ? user.profileImage : 'https://d3e29z0m37b0un.cloudfront.net/profile-images/debut.webp', 
             theme: user.theme,
             country: user.country,
         }));
@@ -192,9 +194,13 @@ router.get('/all-public-profiles', async (req, res) => {
 router.get('/all-public-profiles/all', async (req, res) => {
     try {
         const users = await User.find({
-            profileImage: { $exists: true, $ne: '' },
-            theme: { $exists: true, $ne: '' }
-        }).select('username profileImage theme');
+            // Has a selected theme (not default/empty)
+            theme: { $exists: true, $ne: '', $ne: 'default' },
+            // Has items in topThirteen list
+            'rankings.topThirteen': { $exists: true, $ne: [] },
+            // Has albumRankings set (check if allAlbums exists and is not empty)
+            'rankings.albumRankings.allAlbums': { $exists: true, $ne: [] }
+        }).select('username profileImage theme country');
 
         res.json(users);
     } catch (error) {
