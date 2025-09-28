@@ -560,4 +560,103 @@ router.get('/surprise-songs', async (req, res) => {
     }
 });
 
+// Get perfect album for user profile
+router.get('/user/perfect-album', authenticateJWT, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const trackRankings = user.rankings?.trackRankings || [];
+        
+        // Extract only the first song from each track position
+        const perfectAlbum = trackRankings.map((trackList, index) => {
+            if (trackList && trackList.length > 0) {
+                const topSong = trackList.find(song => song.rank === 1) || trackList[0];
+                return {
+                    trackNumber: index + 1,
+                    songId: topSong.songId,
+                    songTitle: topSong.songTitle,
+                    albumName: topSong.albumName,
+                    audioSource: topSong.audioSource,
+                    albumImageSource: topSong.albumImageSource,
+                    rank: topSong.rank || 1
+                };
+            }
+            return null;
+        }).filter(song => song !== null);
+
+        res.json(perfectAlbum);
+    } catch (error) {
+        console.error('Error fetching perfect album:', error);
+        res.status(500).json({ message: 'Error fetching perfect album', error: error.message });
+    }
+});
+
+// Paginated all songs summary for user profile
+router.get('/user/all-songs-summary', authenticateJWT, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Get pagination parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const allSongsRanking = user.rankings?.allSongsRanking || [];
+        
+        // Sort all songs by rank
+        const sortedSongs = allSongsRanking.sort((a, b) => a.rank - b.rank);
+        
+        // Apply pagination
+        const paginatedSongs = sortedSongs.slice(skip, skip + limit);
+        
+        // Return paginated data with metadata
+        res.json({
+            songs: paginatedSongs,
+            currentPage: page,
+            totalSongs: sortedSongs.length,
+            hasMore: skip + limit < sortedSongs.length,
+            totalPages: Math.ceil(sortedSongs.length / limit)
+        });
+    } catch (error) {
+        console.error('Error fetching all songs summary:', error);
+        res.status(500).json({ message: 'Error fetching all songs summary', error: error.message });
+    }
+});
+
+// Paginated all songs summary for public user profile
+router.get('/user/:username/all-songs-summary', async (req, res) => {
+    try {
+        const { username } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const user = await User.findOne({ username: username });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const allSongsRanking = user.rankings?.allSongsRanking || [];
+        const sortedSongs = allSongsRanking.sort((a, b) => a.rank - b.rank);
+        const paginatedSongs = sortedSongs.slice(skip, skip + limit);
+        
+        res.json({
+            songs: paginatedSongs,
+            currentPage: page,
+            totalSongs: sortedSongs.length,
+            hasMore: skip + limit < sortedSongs.length,
+            totalPages: Math.ceil(sortedSongs.length / limit)
+        });
+    } catch (error) {
+        console.error('Error fetching user all songs summary:', error);
+        res.status(500).json({ message: 'Error fetching user all songs summary', error: error.message });
+    }
+});
+
 module.exports = router;

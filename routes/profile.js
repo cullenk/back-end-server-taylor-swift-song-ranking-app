@@ -153,8 +153,6 @@ router.get('/all-public-profiles', async (req, res) => {
         const skip = (page - 1) * limit;
 
         const users = await User.find({
-            // Has a selected theme (not default/empty)
-            theme: { $exists: true, $ne: '', $ne: 'default' },
             // Has items in topThirteen list
             'rankings.topThirteen': { $exists: true, $ne: [] },
             // Has albumRankings set (check if allAlbums exists and is not empty)
