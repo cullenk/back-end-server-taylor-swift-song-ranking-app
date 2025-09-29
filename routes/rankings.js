@@ -444,23 +444,6 @@ router.get('/user/top-five-albums', authenticateJWT, async (req, res) => {
     }
 });
 
-// Get user's top 5 albums (public)
-router.get('/user/:username/top-five-albums', async (req, res) => {
-    try {
-        const user = await User.findOne({ username: req.params.username });
-        if (!user || !user.rankings || !user.rankings.albumRankings || !user.rankings.albumRankings.allAlbums) {
-            return res.status(404).json({ message: 'Top albums not found' });
-        }
-        const topFiveAlbums = user.rankings.albumRankings.allAlbums
-            .sort((a, b) => a.rank - b.rank)
-            .slice(0, 5);
-        res.json(topFiveAlbums);
-    } catch (error) {
-        console.error('Error fetching top 5 albums:', error);
-        res.status(500).json({ message: 'Error fetching top 5 albums', error: error.message });
-    }
-});
-
 //Album Popularity for homepage
 router.get('/album-popularity', async (req, res) => {
     try {
@@ -656,6 +639,151 @@ router.get('/user/:username/all-songs-summary', async (req, res) => {
     } catch (error) {
         console.error('Error fetching user all songs summary:', error);
         res.status(500).json({ message: 'Error fetching user all songs summary', error: error.message });
+    }
+});
+
+// Get user's top 5 albums (public)
+router.get('/user/:username/top-five-albums', async (req, res) => {
+    try {
+        const { username } = req.params;
+        console.log(`🔍 [TOP-5-ALBUMS] Fetching top 5 albums for username: ${username}`);
+        
+        const user = await User.findOne({ username: username });
+        if (!user) {
+            console.log(`❌ [TOP-5-ALBUMS] User not found: ${username}`);
+            return res.status(404).json({ message: 'Top albums not found' });
+        }
+
+        console.log(`✅ [TOP-5-ALBUMS] User found: ${username}`);
+        console.log(`📊 [TOP-5-ALBUMS] User rankings structure:`, {
+            hasRankings: !!user.rankings,
+            hasAlbumRankings: !!(user.rankings?.albumRankings),
+            hasAllAlbums: !!(user.rankings?.albumRankings?.allAlbums),
+            allAlbumsCount: user.rankings?.albumRankings?.allAlbums?.length || 0
+        });
+
+        if (!user.rankings || !user.rankings.albumRankings || !user.rankings.albumRankings.allAlbums) {
+            console.log(`❌ [TOP-5-ALBUMS] No album rankings found for user: ${username}`);
+            return res.status(404).json({ message: 'Top albums not found' });
+        }
+
+        const allAlbums = user.rankings.albumRankings.allAlbums;
+        console.log(`📋 [TOP-5-ALBUMS] Raw allAlbums data for ${username}:`, allAlbums);
+
+        const topFiveAlbums = allAlbums
+            .sort((a, b) => a.rank - b.rank)
+            .slice(0, 5);
+
+        console.log(`🏆 [TOP-5-ALBUMS] Top 5 albums for ${username}:`, topFiveAlbums);
+        res.json(topFiveAlbums);
+    } catch (error) {
+        console.error(`💥 [TOP-5-ALBUMS] Error fetching top 5 albums for ${req.params.username}:`, error);
+        res.status(500).json({ message: 'Error fetching top 5 albums', error: error.message });
+    }
+});
+
+// Get public user rankings
+router.get('/user/:username/rankings', async (req, res) => {
+    try {
+        const { username } = req.params;
+        console.log(`🔍 [PUBLIC-RANKINGS] Fetching full rankings for username: ${username}`);
+        
+        const user = await User.findOne({ username: username }).select('rankings');
+        
+        if (!user) {
+            console.log(`❌ [PUBLIC-RANKINGS] User not found: ${username}`);
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        console.log(`✅ [PUBLIC-RANKINGS] User found: ${username}`);
+        console.log(`📊 [PUBLIC-RANKINGS] Full rankings structure for ${username}:`, {
+            hasRankings: !!user.rankings,
+            hasAlbumRankings: !!(user.rankings?.albumRankings),
+            hasAllAlbums: !!(user.rankings?.albumRankings?.allAlbums),
+            hasTrackRankings: !!(user.rankings?.trackRankings),
+            hasAllSongsRanking: !!(user.rankings?.allSongsRanking),
+            allAlbumsCount: user.rankings?.albumRankings?.allAlbums?.length || 0,
+            trackRankingsCount: user.rankings?.trackRankings?.length || 0,
+            allSongsRankingCount: user.rankings?.allSongsRanking?.length || 0
+        });
+
+        if (user.rankings?.albumRankings?.allAlbums) {
+            console.log(`📋 [PUBLIC-RANKINGS] AllAlbums data for ${username}:`, user.rankings.albumRankings.allAlbums);
+        }
+
+        if (user.rankings?.trackRankings) {
+            console.log(`🎵 [PUBLIC-RANKINGS] TrackRankings summary for ${username}:`, {
+                totalTracks: user.rankings.trackRankings.length,
+                tracksWithSongs: user.rankings.trackRankings.filter(track => track && track.length > 0).length,
+                firstTrackSongs: user.rankings.trackRankings[0]?.length || 0
+            });
+        }
+
+        if (user.rankings?.allSongsRanking) {
+            console.log(`🎶 [PUBLIC-RANKINGS] AllSongsRanking summary for ${username}:`, {
+                totalSongs: user.rankings.allSongsRanking.length,
+                firstFiveSongs: user.rankings.allSongsRanking.slice(0, 5).map(song => ({
+                    rank: song.rank,
+                    title: song.songTitle,
+                    album: song.albumName
+                }))
+            });
+        }
+        
+        res.json(user.rankings || {});
+    } catch (error) {
+        console.error(`💥 [PUBLIC-RANKINGS] Error fetching public user rankings for ${req.params.username}:`, error);
+        res.status(500).json({ message: 'Error fetching public user rankings', error: error.message });
+    }
+});
+
+// Get public user perfect album
+router.get('/user/:username/perfect-album', async (req, res) => {
+    try {
+        const { username } = req.params;
+        console.log(`🔍 [PERFECT-ALBUM] Fetching perfect album for username: ${username}`);
+        
+        const user = await User.findOne({ username: username });
+        
+        if (!user) {
+            console.log(`❌ [PERFECT-ALBUM] User not found: ${username}`);
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const trackRankings = user.rankings?.trackRankings || [];
+        console.log(`📊 [PERFECT-ALBUM] TrackRankings for ${username}:`, {
+            hasTrackRankings: !!user.rankings?.trackRankings,
+            trackCount: trackRankings.length,
+            tracksWithSongs: trackRankings.filter(track => track && track.length > 0).length
+        });
+
+        // Extract only the first song from each track position
+        const perfectAlbum = trackRankings.map((trackList, index) => {
+            if (trackList && trackList.length > 0) {
+                const topSong = trackList.find(song => song.rank === 1) || trackList[0];
+                console.log(`🎵 [PERFECT-ALBUM] Track ${index + 1} top song for ${username}:`, {
+                    songTitle: topSong.songTitle,
+                    albumName: topSong.albumName,
+                    rank: topSong.rank
+                });
+                return {
+                    trackNumber: index + 1,
+                    songId: topSong.songId,
+                    songTitle: topSong.songTitle,
+                    albumName: topSong.albumName,
+                    audioSource: topSong.audioSource,
+                    albumImageSource: topSong.albumImageSource,
+                    rank: topSong.rank || 1
+                };
+            }
+            return null;
+        }).filter(song => song !== null);
+
+        console.log(`🏆 [PERFECT-ALBUM] Final perfect album for ${username}:`, perfectAlbum);
+        res.json(perfectAlbum);
+    } catch (error) {
+        console.error(`💥 [PERFECT-ALBUM] Error fetching public perfect album for ${req.params.username}:`, error);
+        res.status(500).json({ message: 'Error fetching public perfect album', error: error.message });
     }
 });
 
