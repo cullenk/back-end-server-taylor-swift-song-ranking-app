@@ -12,7 +12,7 @@ const app = express();
 const allowedOrigins = [
   'https://swiftierankinghub.com',
   'https://www.swiftierankinghub.com', 
-  'https://api.swiftierankinghub.com' 
+  'https://api.swiftierankinghub.com', 
   'http://localhost:4200',
   'http://localhost:3000',              
 ];
