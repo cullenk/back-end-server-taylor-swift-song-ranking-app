@@ -11,7 +11,9 @@ const app = express();
 
 const allowedOrigins = [
   'https://swiftierankinghub.com',
-  'http://localhost:4200'
+  'https://www.swiftierankinghub.com',  // Add www version
+  'http://localhost:4200',
+  'http://localhost:3000',               // Add if testing locally
 ];
 
 app.use(cors({

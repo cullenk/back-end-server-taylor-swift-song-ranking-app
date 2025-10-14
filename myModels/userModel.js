@@ -65,6 +65,7 @@ const userSchema = new mongoose.Schema({
       evermore: [rankingSchema],
       midnights: [rankingSchema],
       theTorturedPoetsDepartment: [rankingSchema],
+      theLifeOfAShowgirl: [rankingSchema],
       standaloneSingles: [rankingSchema],
       allAlbums: [albumRankingSchema]
     },

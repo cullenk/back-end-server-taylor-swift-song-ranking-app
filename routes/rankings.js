@@ -449,6 +449,14 @@ router.get('/album-popularity', async (req, res) => {
     try {
         let result = myCache.get("album-popularity");
         if (result == undefined) {
+            console.log('🔍 [ALBUM-POPULARITY] Cache miss, calculating album popularity...');
+            
+            const usersWithRankings = await User.find({ 
+                'rankings.albumRankings.allAlbums': { $exists: true, $ne: [] } 
+            }).select('username rankings.albumRankings.allAlbums');
+            
+            console.log(`👥 [ALBUM-POPULARITY] Found ${usersWithRankings.length} users with album rankings`);
+
             result = await User.aggregate([
                 // Match users who have album rankings
                 { 
@@ -460,35 +468,84 @@ router.get('/album-popularity', async (req, res) => {
                 { 
                     $unwind: '$rankings.albumRankings.allAlbums' 
                 },
-                // Group by album name and calculate scores based on rank
+                // Group by album name and calculate statistics
                 { 
                     $group: {
-                        _id: '$rankings.albumRankings.allAlbums.albumName', // Group by album name
-                        score: { 
-                            $sum: '$rankings.albumRankings.allAlbums.rank' // Sum ranks directly for scoring
-                        },
-                        cover: { $first: '$rankings.albumRankings.allAlbums.albumCover' } // Get the cover image for the album
+                        _id: '$rankings.albumRankings.allAlbums.albumName',
+                        avgRank: { $avg: '$rankings.albumRankings.allAlbums.rank' },
+                        count: { $sum: 1 },
+                        totalScore: { $sum: '$rankings.albumRankings.allAlbums.rank' },
+                        cover: { $first: '$rankings.albumRankings.allAlbums.albumCover' }
                     }
                 },
-                // Sort by score in ascending order
+                // Calculate weighted score that accounts for sample size
+                {
+                    $addFields: {
+                        // Weighted score: albums with very few ratings get penalized
+                        // Formula: avgRank + (confidence penalty based on sample size)
+                        weightedScore: {
+                            $add: [
+                                '$avgRank',
+                                {
+                                    $multiply: [
+                                        // Penalty decreases as count increases
+                                        { $divide: [50, { $add: ['$count', 10] }] },
+                                        // Base penalty amount
+                                        3
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                // Sort by weighted score (lower = better)
                 { 
-                    $sort: { score: 1 } 
+                    $sort: { weightedScore: 1 } 
                 },
                 // Project the final output structure
                 { 
                     $project: {
-                        albumName: '$_id', // Use the grouped album name
-                        score: 1,          // Include the score
-                        albumCover: '$cover', // Include the cover image
-                        _id: 0             // Exclude the default _id field from output
+                        albumName: '$_id',
+                        avgRank: { $round: ['$avgRank', 2] },
+                        count: 1,
+                        weightedScore: { $round: ['$weightedScore', 2] },
+                        totalScore: 1,
+                        albumCover: '$cover',
+                        _id: 0
                     }
                 }
             ]);
-            myCache.set("album-popularity", result, 3600); // Cache for 1 hour
+
+            console.log('🏆 [ALBUM-POPULARITY] Final aggregation results (sorted by weighted score):');
+            result.forEach((album, index) => {
+                console.log(`   ${index + 1}. ${album.albumName}:`);
+                console.log(`      - Average Rank: ${album.avgRank}`);
+                console.log(`      - Weighted Score: ${album.weightedScore} (lower = better)`);
+                console.log(`      - Count: ${album.count} users ranked it`);
+                console.log(`      - Sample Size Impact: ${album.count < 50 ? '🔻 Small sample penalty applied' : '✅ Large sample'}`);
+            });
+
+            // Check specifically for "The Life of a Showgirl"
+            const showgirlAlbum = result.find(album => album.albumName === "The Life of a Showgirl");
+            if (showgirlAlbum) {
+                console.log('🎭 [ALBUM-POPULARITY] "The Life of a Showgirl" found in results:');
+                console.log(`   Position: ${result.indexOf(showgirlAlbum) + 1}`);
+                console.log(`   Average Rank: ${showgirlAlbum.avgRank}`);
+                console.log(`   Weighted Score: ${showgirlAlbum.weightedScore}`);
+                console.log(`   Count: ${showgirlAlbum.count} users ranked it`);
+                console.log(`   Explanation: Low sample size (${showgirlAlbum.count}) pushes it down in rankings`);
+            } else {
+                console.log('🎭 [ALBUM-POPULARITY] "The Life of a Showgirl" NOT found in aggregation results');
+            }
+
+            myCache.set("album-popularity", result, 3600);
+        } else {
+            console.log('💾 [ALBUM-POPULARITY] Cache hit, returning cached data');
         }
+        
         res.json(result);
     } catch (error) {
-        console.error('Error calculating album popularity:', error);
+        console.error('💥 [ALBUM-POPULARITY] Error calculating album popularity:', error);
         res.status(500).json({ message: 'Error calculating album popularity', error: error.message });
     }
 });
