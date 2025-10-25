@@ -9,6 +9,9 @@ console.log('=== SERVER STARTING ===');
 
 const app = express();
 
+app.use(express.json({ limit: '10mb' })); 
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
 const allowedOrigins = [
   'https://swiftierankinghub.com',
   'https://www.swiftierankinghub.com', 
@@ -19,7 +22,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function(origin, callback) {
-    console.log('🔍 CORS Debug - Incoming request from origin:', origin);
     
     if (!origin) {
       console.log('✅ CORS: No origin header (allowing - likely same-origin request)');
@@ -27,14 +29,14 @@ app.use(cors({
     }
     
     if (allowedOrigins.indexOf(origin) === -1) {
-      console.log('❌ CORS REJECTED:');
-      console.log('   Requesting origin:', origin);
-      console.log('   Allowed origins:', allowedOrigins);
+      // console.log('❌ CORS REJECTED:');
+      // console.log('   Requesting origin:', origin);
+      // console.log('   Allowed origins:', allowedOrigins);
       var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
     
-    console.log('✅ CORS APPROVED origin:', origin);
+    // console.log('✅ CORS APPROVED origin:', origin);
     return callback(null, true);
   },
   credentials: true

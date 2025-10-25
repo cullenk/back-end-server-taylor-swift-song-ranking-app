@@ -358,30 +358,116 @@ router.put('/track-rankings', authenticateJWT, async (req, res) => {
     }
   });
   
-  // Save all songs ranking
-  router.put('/all-songs-ranking', authenticateJWT, async (req, res) => {
-    const { ranking } = req.body;
-  
-    try {
-      let user = await User.findById(req.user.userId);
-      if (!user) {
-        return res.status(404).json({ msg: 'User not found' });
-      }
-  
-      if (!user.rankings) {
-        user.rankings = {};
-      }
-  
-      user.rankings.allSongsRanking = ranking;
-  
-      await user.save();
-  
-      res.json(user.rankings.allSongsRanking);
-    } catch (err) {
-      console.error('Error saving all songs ranking:', err);
-      res.status(500).send('Server Error');
-    }
+// Save all songs ranking
+router.put('/all-songs-ranking', authenticateJWT, async (req, res) => {
+  const { ranking } = req.body;
+
+  // Validate input
+  if (!ranking) {
+    console.log('❌ [BACKEND] No ranking data provided');
+    return res.status(400).json({ message: 'No ranking data provided' });
+  }
+
+  if (!Array.isArray(ranking)) {
+    console.log('❌ [BACKEND] Ranking is not an array:', typeof ranking);
+    return res.status(400).json({ message: 'Ranking must be an array' });
+  }
+
+  console.log('📊 [BACKEND] Received ranking data:', {
+    totalSongs: ranking.length,
+    firstThreeSongs: ranking.slice(0, 3).map(s => ({ 
+      rank: s.rank, 
+      title: s.songTitle,
+      songId: s.songId,
+      hasRequiredFields: !!(s.rank && s.songTitle && s.songId)
+    }))
   });
+
+  try {
+    // Validate user exists
+    if (!req.user || !req.user.userId) {
+      console.log('❌ [BACKEND] No user ID in request');
+      return res.status(401).json({ message: 'User authentication required' });
+    }
+
+    console.log('🔍 [BACKEND] Looking for user with ID:', req.user.userId);
+    let user = await User.findById(req.user.userId);
+    
+    if (!user) {
+      console.log('❌ [BACKEND] User not found with ID:', req.user.userId);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log('✅ [BACKEND] User found:', user.username || user.email);
+
+    // Initialize rankings object if it doesn't exist
+    if (!user.rankings) {
+      console.log('🔧 [BACKEND] Initializing rankings object for user');
+      user.rankings = {};
+    }
+
+    // Validate ranking data structure
+    const invalidItems = ranking.filter(item => 
+      !item.songId || 
+      !item.songTitle || 
+      !item.rank || 
+      typeof item.rank !== 'number'
+    );
+
+    if (invalidItems.length > 0) {
+      console.log('❌ [BACKEND] Invalid ranking items found:', invalidItems.slice(0, 3));
+      return res.status(400).json({ 
+        message: 'Invalid ranking data structure',
+        invalidItems: invalidItems.length
+      });
+    }
+
+    // Save the ranking
+    user.rankings.allSongsRanking = ranking;
+    
+    const savedUser = await user.save();
+    
+    // Verify what was actually saved
+    const savedRanking = savedUser.rankings.allSongsRanking;
+    console.log('🔍 [BACKEND] Verification - saved ranking:', {
+      totalSongs: savedRanking?.length || 0,
+      firstThreeSongs: savedRanking?.slice(0, 3).map(s => ({ 
+        rank: s.rank, 
+        title: s.songTitle 
+      })) || []
+    });
+
+    res.status(200).json(savedUser.rankings.allSongsRanking);
+    
+  } catch (error) {
+    console.error('❌ [BACKEND] Error saving all songs ranking:');
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    
+    // Check for specific MongoDB errors
+    if (error.name === 'ValidationError') {
+      console.error('MongoDB Validation Error:', error.errors);
+      return res.status(400).json({ 
+        message: 'Data validation failed', 
+        errors: error.errors 
+      });
+    }
+    
+    if (error.name === 'CastError') {
+      console.error('MongoDB Cast Error:', error.message);
+      return res.status(400).json({ 
+        message: 'Invalid data format', 
+        error: error.message 
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Internal server error', 
+      error: error.message 
+    });
+  }
+});
 
 // Get Eras Tour Set List
 router.get('/eras-tour-set-list', authenticateJWT, async (req, res) => {
