@@ -302,6 +302,43 @@ router.get('/country-stats', async (req, res) => {
     }
 });
 
+// Delete user profile and all associated data
+router.delete('/delete-profile', authenticateJWT, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        
+        // Find the user first to get their data for logging
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        // Log the deletion for audit purposes
+        console.log(`Deleting profile for user: ${user.username} (ID: ${userId})`);
+        
+        // Delete the user and all associated data
+        const deletedUser = await User.findByIdAndDelete(userId);
+        
+        if (!deletedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        // Log successful deletion
+        console.log(`Successfully deleted profile for user: ${deletedUser.username}`);
+        
+        res.status(200).json({ 
+            message: 'Profile deleted successfully',
+            deletedUsername: deletedUser.username
+        });
+        
+    } catch (error) {
+        console.error('Error deleting profile:', error);
+        res.status(500).json({ 
+            message: 'Error deleting profile', 
+            error: error.message 
+        });
+    }
+});
 
 module.exports = router;
 
