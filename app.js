@@ -53,12 +53,45 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https:"], // Added connectSrc
-      fontSrc: ["'self'", "https:", "data:"], // Added fontSrc
-      frameSrc: ["'self'"], // Added frameSrc
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'", 
+        "'unsafe-eval'",
+        "*.googletagservices.com",    // Google Ads
+        "*.googlesyndication.com",    // Google Ads  
+        "*.google.com",               // Google Ads
+        "*.gstatic.com",              // Google Ads
+        "googleads.g.doubleclick.net", // Google Ads
+        "pagead2.googlesyndication.com" // Google Ads
+      ],
+      styleSrc: [
+        "'self'", 
+        "'unsafe-inline'",
+        "*.googletagservices.com",    // Google Ads
+        "*.googleapis.com"            // Google Ads
+      ],
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "https:",
+        "*.googletagservices.com",    // Google Ads
+        "*.googlesyndication.com",    // Google Ads
+        "*.google.com",               // Google Ads
+        "*.gstatic.com"               // Google Ads
+      ],
+      connectSrc: [
+        "'self'", 
+        "https:",
+        "*.google.com",               // Google Ads
+        "*.googlesyndication.com"     // Google Ads
+      ],
+      fontSrc: ["'self'", "https:", "data:"],
+      frameSrc: [
+        "'self'",
+        "*.googletagservices.com",    // Google Ads
+        "*.googlesyndication.com",    // Google Ads
+        "*.google.com"                // Google Ads
+      ],
     },
   },
   hsts: {
@@ -69,7 +102,7 @@ app.use(helmet({
   referrerPolicy: {
     policy: 'strict-origin-when-cross-origin',
   },
-  crossOriginEmbedderPolicy: false, // This helps with compatibility
+  crossOriginEmbedderPolicy: false,
 }));
 
 app.use((req, res, next) => {
