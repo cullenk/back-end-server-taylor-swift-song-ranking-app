@@ -15,7 +15,6 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 const allowedOrigins = [
   'https://swiftierankinghub.com',
   'https://www.swiftierankinghub.com', 
-  'https://api.swiftierankinghub.com', 
   'http://localhost:4200',
   'http://localhost:3000',              
 ];
@@ -42,6 +41,14 @@ app.use(cors({
   credentials: true
 }));
 
+app.use((req, res, next) => {
+  // Force HTTPS in production
+  if (req.header('x-forwarded-proto') !== 'https' && process.env.NODE_ENV === 'production') {
+    return res.redirect(301, `https://${req.header('host')}${req.url}`);
+  }
+  next();
+});
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -49,12 +56,29 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https:"], // Added connectSrc
+      fontSrc: ["'self'", "https:", "data:"], // Added fontSrc
+      frameSrc: ["'self'"], // Added frameSrc
     },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
   },
   referrerPolicy: {
     policy: 'strict-origin-when-cross-origin',
   },
+  crossOriginEmbedderPolicy: false, // This helps with compatibility
 }));
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
